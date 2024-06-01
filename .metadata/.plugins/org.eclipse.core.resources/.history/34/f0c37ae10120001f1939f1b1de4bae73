@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Add Member</title>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+<script type="text/javascript" src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+20&family=Jersey+25&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Noto+Sans+Myanmar:wght@100;200;300;400;500;600;700;800;900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Padauk:wght@400;700&family=Platypi:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div th:replace="fragment/header1"></div>
+
+<div class="container m-5">
+  <h1 style="font-family: 'Poppins', sans-serif; color:darkblue;">Add New Member</h1>
+  <form th:object="${member}" th:action="@{/member/save}" method="post" class="needs-validation" novalidate>
+    <div>
+      <label>Name</label>
+      <input class="form-control" th:field="*{name}" type="text" aria-label="default input example" required minlength="5" maxlength="50">
+      <div class="invalid-feedback">Please enter a valid Member name!</div>
+      <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+    </div>
+    <div>
+      <label>Username</label>
+      <input class="form-control" th:field="*{username}" type="text" aria-label="default input example" required minlength="5" maxlength="50">
+      <div class="invalid-feedback">Please enter a valid Username!</div>
+      <p class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+    </div>
+    <div>
+      <label>Password</label>
+      <input class="form-control" th:field="*{password}" type="password" aria-label="default input example" required minlength="5" maxlength="255">
+      <div class="invalid-feedback">Please enter a valid Password!</div>
+      <p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+    </div>
+    <div>
+      <label>Email</label>
+      <input class="form-control my-3" th:field="*{email}" type="email" aria-label="default input example" required>
+      <div class="invalid-feedback">Please enter a valid Email!</div>
+      <p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+    </div>
+    <div>
+      <label>Role</label>
+      <select class="form-select" th:field="*{role}" required>
+        <option value="">Choose one</option>
+        <option value="ROLE_USER">User</option>
+        <option value="ROLE_ADMIN">Admin</option>
+      </select>
+    </div>
+    <br>
+    <input class="form-control text-white bg-primary" type="submit" value="Add Member">
+  </form>
+</div>
+
+<!-- Form Validation -->
+<script type="text/javascript">
+  'use strict'
+  var form = document.querySelector('.needs-validation')
+  form.addEventListener('submit', function(event) {
+    if (!form.checkValidity()) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+    form.classList.add('was-validated')
+  })
+</script>
+<!-- End Form Validation -->
+
+<div th:replace="fragment/footer"></div>
+</body>
+</html>

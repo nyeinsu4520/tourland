@@ -1,0 +1,70 @@
+package com.example.demo;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
+
+@Controller
+public class CardController {
+
+	@Autowired
+    private CardRepository cardRepo;
+
+    @GetMapping("/cards")
+    public String getCards(Model model) {
+        List<Card> cards = cardRepo.findAll();
+        model.addAttribute("cards", cards);
+        return "cards";
+    }
+
+	
+	@GetMapping("/cards/add")
+	public String addItem(Model model) {
+		model.addAttribute("card",new Card());
+		List<Card> cardlist=cardRepo.findAll();
+		model.addAttribute("cardlist",cardlist);
+		return "add_card";
+	}
+	
+	
+	@PostMapping("/save")
+	public String saveItem(@Valid Item item,BindingResult bindingResult, @RequestParam("itemImage") MultipartFile imgFile,Model model) {
+	if(bindingResult.hasErrors()) {
+		List<Category> categorylist=categoryRepo.findAll();
+		model.addAttribute("categorylist",categorylist);
+		return "add_item";
+	}
+	
+	String imageName = imgFile.getOriginalFilename();
+	// set the image name in item object
+	item.setImgname(imageName);
+	// save the item obj to the db
+	Item savedItem = itemRepo.save(item);
+	try {
+	// prepare the directory path
+	String uploadDir = "uploads/items/" + savedItem.getId();
+	Path uploadPath = Paths.get(uploadDir);
+	// check if the upload path exists, if not it will be created
+	if (!Files.exists(uploadPath)) {
+	Files.createDirectories(uploadPath);
+	}
+	// prepare path for file
+	Path fileToCreatePath = uploadPath.resolve(imageName);
+	System.out.println("File path: " + fileToCreatePath);
+	// copy file to the upload location
+	Files.copy(imgFile.getInputStream(), fileToCreatePath, StandardCopyOption.REPLACE_EXISTING);
+	} catch (IOException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	itemRepo.save(item);
+	return "redirect:/item";
+	}
+    
+    
+    
+}
