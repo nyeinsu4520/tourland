@@ -18,6 +18,38 @@
       	text-decoration: none;
       	color:black;
       	font-size:20px;
+      	
+      .carousel-inner{
+      padding:1em;
+      }	
+      
+      .img-wrapper{
+      max-width:100%;
+      height:20em;
+      display:flex;
+      justify-content:center;
+      }
+      img{
+      	max-width:100%;
+      	max-height:100%;
+      }
+      
+      .card{
+      	margin:0 .5em;
+      }
+      @media screen and (min-width:576px){
+      	.carousel-inner{
+      		display:flex;
+      		}
+      	.carousel-item{
+      		display:block;
+      		margin-right:0;
+      		flex:0 0 calc(100%/3);
+      		}
+      	.img-wrapper{
+      		height:23vw;
+      		}	
+      	}
       }
       
   </style>
@@ -98,15 +130,15 @@
 	<div class="container mt-4">
 	<h3>Ways to tour with Our Package</h3>
 	
-	</div>
-	<div id="cardCarousel" class="carousel slide mt-3 pt-5" data-bs-ride="carousel">
+	
+	<div id="cardCarousel1" class="carousel slide mt-3 pt-5" data-bs-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active">
             <div class="container">
                 <div class="row">
                     <div th:each="restaurant, iterStat : ${restaurantlist}" class="col-sm-6 col-md-4 col-lg-3 mb-4" th:if="${iterStat.index < 4}">
                         <div class="card">
-                            <td><img width="260px" height="180px" th:src="@{uploads/restaurants/{id}/{imageName} (id=${restaurant.id},imageName=${restaurant.image})}" /></td>
+                            <td><img width="260px" height="180px" th:src="@{uploads/restaurants/{id}/{imageName} (id=${restaurant.restaurant_id},imageName=${restaurant.image})}" /></td>
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${restaurant.title}"></h5>
                                 <p class="card-text" th:text="${restaurant.description}"></p>
@@ -119,53 +151,114 @@
         </div>
     </div>
     <!-- Arrow buttons -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel1" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel1" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>
 </div>
 	
 	
-	
-	<div class="container mt-4">
-	<h3>Hotels Rentals Near You</h3>
-	
-	</div>
-	<div id="cardCarousel" class="carousel slide mt-3 pt-5" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
+
+
+
+
+
+
+
+    <div id="cardCarousel2" class="carousel slide mt-3 pt-5" data-bs-ride="carousel">
+        <div class="carousel-inner">
             <div class="container">
                 <div class="row">
-                    <div th:each="card, iterStat : ${cardlist}" class="col-sm-6 col-md-4 col-lg-3 mb-4" th:if="${iterStat.index < 4}">
+                    <div th:each="card, iterStat : ${cardlist}" class="col-sm-6 col-md-4 col-lg-3 mb-4 carousel-item" th:classappend="${iterStat.index == 0} ? 'active' : ''">
                         <div class="card">
-                            <td><img width="260px" height="180px" th:src="@{uploads/cards/{id}/{imageName} (id=${card.id},imageName=${card.image})}" /></td>
+                            <img width="260px" height="180px" th:src="@{uploads/cards/{id}/{imageName} (id=${card.hotel_id},imageName=${card.image})}" />
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${card.title}"></h5>
                                 <p class="card-text" th:text="${card.description}"></p>
                             </div>
                         </div>
-                  
                     </div>
                 </div>
             </div>
         </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel2" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel2" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
-    <!-- Arrow buttons -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
 </div>
-	
-	
+
+<script>
+
+$(document).ready(function() {
+    let currentPage = 0;
+    const pageSize = 4;
+
+    $('#cardCarousel2').carousel();
+
+    $('.carousel-control-next').click(function() {
+        currentPage++;
+        fetchNextCards(currentPage, pageSize);
+    });
+
+    function fetchNextCards(page, size) {
+        $.ajax({
+            url: '/cards/fetch-next-cards',
+            method: 'GET',
+            data: { page: page, size: size },
+            dataType: 'json',
+            success: function(response) {
+                console.log('Response:', response);
+                if (response && Array.isArray(response)) {
+                    updateCarousel(response);
+                } else {
+                    console.error('Invalid response format:', response);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching next cards:', error);
+                console.error('Status:', status);
+                console.error('XHR:', xhr);
+            }
+        });
+    }
+
+    function updateCarousel(cards) {
+        cards.forEach(function(card, index) {
+            var itemClass = index === 0 ? 'carousel-item active' : 'carousel-item';
+            var carouselItem = $('<div class="' + itemClass + '"></div>');
+
+            var cardHtml = '<div class="col-sm-6 col-md-4 col-lg-3 mb-4">' +
+                                '<div class="card">' +
+                                    '<img width="260px" height="180px" src="' + card.image + '" />' +
+                                    '<div class="card-body">' +
+                                        '<h5 class="card-title">' + card.title + '</h5>' +
+                                        '<p class="card-text">' + card.description + '</p>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>';
+            carouselItem.append(cardHtml);
+            $('#cardCarousel2 .carousel-inner').append(carouselItem);
+        });
+    }
+
+    // Initial load
+    fetchNextCards(currentPage, pageSize);
+});
+</script>
+
+
+
+</div>
+
 	
 	
   <div class="container col-xxl-8 px-4 py-5">
@@ -187,18 +280,18 @@
 	
 
 	
-	<div class="container mt-4">
+	<div class="container">
 	<h3>You might like these</h3>
 	<p>More restaurants in Myanmar</p>
 	</div>
-	<div id="cardCarousel" class="carousel slide mt-3 pt-5" data-bs-ride="carousel">
+	<div id="cardCarousel3" class="carousel slide mt-3 pt-5" data-bs-ride="carousel">
     <div class="carousel-inner">
-        <div class="carousel-item active">
+        <div id="firstFourCards" class="carousel-item active">
             <div class="container">
                 <div class="row">
                     <div th:each="package, iterStat : ${packagelist}" class="col-sm-6 col-md-4 col-lg-3 mb-4" th:if="${iterStat.index < 4}">
                         <div class="card">
-                            <td><img width="260px" height="180px" th:src="@{uploads/packages/{id}/{imageName} (id=${package.id},imageName=${package.image})}" /></td>
+                            <td><img width="260px" height="180px" th:src="@{uploads/packages/{id}/{imageName} (id=${package.package_id},imageName=${package.image})}" /></td>
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${package.title}"></h5>
                                 <p class="card-text" th:text="${package.description}"></p>
@@ -209,13 +302,29 @@
                 </div>
             </div>
         </div>
+         <div id="remainingCards" class="carousel-item">
+                <div class="container">
+                    <div class="row" id="additionalCardsRow">
+                        <div th:each="package, iterStat : ${packagelist}" class="col-sm-6 col-md-4 col-lg-3 mb-4" th:if="${iterStat.index < 4}">
+                        <div class="card">
+                            <td><img width="260px" height="180px" th:src="@{uploads/packages/{id}/{imageName} (id=${package.id},imageName=${package.image})}" /></td>
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${package.title}"></h5>
+                                <p class="card-text" th:text="${package.description}"></p>
+                            </div>
+                        </div>
+                  
+                    </div>
+                    </div>
+                </div>
+            </div>
     </div>
     <!-- Arrow buttons -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel3" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel3" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>
@@ -226,8 +335,14 @@
 <script>
     $(document).ready(function(){
         $('#cardCarousel').carousel();
+        $('#cardCarousel3').carousel();
     });
+    
+   
 </script>
+
+
+
 
 <div th:replace="Fragment/footer"></div>
 </body>

@@ -1,0 +1,17 @@
+package com.example.demo;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class MemberServiceImpl implements MemberService {
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    // Other methods
+
+    @Override
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username);
+    }
+}

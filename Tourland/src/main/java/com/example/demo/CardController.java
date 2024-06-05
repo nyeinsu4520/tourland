@@ -5,17 +5,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +36,14 @@ public class CardController {
     private RestaurantRespository RestaurantRepo;
 	@Autowired
 	private PackageRepository packageRepo;
-	
+
+    @Autowired
+    private CardService cardService;
+    @Autowired
+    private MemberService memberService;
+    
+
+
 
 	@GetMapping("/index")
     public String getIndex(Model model) {
@@ -42,8 +55,74 @@ public class CardController {
         model.addAttribute("packagelist",packagelist);
         return "index";
     }
-	    
+	
+	 @GetMapping("/cards")
+	    public String getAllHotels(Model model) {
+	        List<Card> cards = cardService.findAll();
+	        model.addAttribute("cards", cards);
+	        return "hoteldetails";
+	    }
+	 
+	 
+	 @GetMapping("/cards/{id}")
+	 public String getCardById(@PathVariable Integer id, Model model, Principal principal) {
+	     Optional<Card> cardOptional = cardService.findById(id);
+	     if (cardOptional.isPresent()) {
+	         Card card = cardOptional.get();
+	         List<ReviewHotel> reviews = card.getReviewshotel(); // Fetch reviews associated with the card
+	         
+	         // Get the logged-in member's ID
+	         String loggedInMemberId = "";
+	         if (principal != null) {
+	             // Retrieve the username from the principal
+	             String username = principal.getName();
+	             // Use the username to find the member ID
+	             String memberId = memberService.findIdByUsername(username);
+	             if (memberId != null) {
+	                 loggedInMemberId = memberId;
+	             }
+	         }
+	         
+	         model.addAttribute("card", card);
+	         model.addAttribute("reviews", reviews); // Add reviews to the model
+	         model.addAttribute("loggedInMemberId", loggedInMemberId);
+	     }
+	     return "hoteldetails";
+	 }
 
+	 
+	
+	 @PostMapping("/cards")
+	    public String createHotel(@ModelAttribute Card card) {
+	        cardService.save(card);
+	        return "redirect:/cards";
+	    }
+
+	 @PostMapping("/cards/{id}/reviews")
+	 public String addReview(@PathVariable Integer id, @RequestParam String comment, @RequestParam int rating, Principal principal) {
+	     Optional<Card> cardOpt = cardService.findById(id);
+	     if (cardOpt.isPresent() && principal != null) {
+	         String username = principal.getName();
+	         Member member = memberService.findByUsername(username); // Fetch the logged-in member
+	         if (member != null) {
+	             Card card = cardOpt.get();
+	             ReviewHotel review = new ReviewHotel(comment, rating);
+	             review.setMember(member); // Associate the comment with the logged-in member
+	             review.setCard(card);
+	             card.getReviewshotel().add(review);
+	             cardService.save(card);
+	         }
+	     }
+	     return "redirect:/cards/" + id;
+	 }
+
+
+
+
+
+
+
+	 
 
 	
 	@GetMapping("/cards/add")
@@ -70,7 +149,7 @@ public class CardController {
 	Card savedItem = cardRepo.save(card);
 	try {
 	// prepare the directory path
-	String uploadDir = "uploads/cards/" + savedItem.getId();
+	String uploadDir = "uploads/cards/" + savedItem.getHotel_id();
 	Path uploadPath = Paths.get(uploadDir);
 	// check if the upload path exists, if not it will be created
 	if (!Files.exists(uploadPath)) {
@@ -88,6 +167,7 @@ public class CardController {
 	cardRepo.save(card);
 	return "redirect:/index";
 	}
+	
     
 	
 	@GetMapping("/restaurant/add")
@@ -114,7 +194,7 @@ public class CardController {
 	Restaurant savedItem = RestaurantRepo.save(restaurant);
 	try {
 	// prepare the directory path
-	String uploadDir = "uploads/restaurants/" + savedItem.getId();
+	String uploadDir = "uploads/restaurants/" + savedItem.getRestaurant_id();
 	Path uploadPath = Paths.get(uploadDir);
 	// check if the upload path exists, if not it will be created
 	if (!Files.exists(uploadPath)) {
@@ -157,7 +237,7 @@ public class CardController {
 	Package savedItem = packageRepo.save(packageObj);
 	try {
 	// prepare the directory path
-	String uploadDir = "uploads/packages/" + savedItem.getId();
+	String uploadDir = "uploads/packages/" + savedItem.getPackage_id();
 	Path uploadPath = Paths.get(uploadDir);
 	// check if the upload path exists, if not it will be created
 	if (!Files.exists(uploadPath)) {

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hotels</title>
+</head>
+<body>
+    <h1>Hotels</h1>
+    <ul>
+        <li th:each="card : ${cards}">
+            <a th:href="@{/cards/{id}(id=${card.hotel_id})}">
+                <span th:text="${card.title}">Hotel Name</span>
+            </a> -
+            <span th:text="${card.location}">Location</span> -
+            <span th:text="${card.description}">Description</span>
+        </li>
+    </ul>
+    <a href="/hotels/new">Add New Hotel</a>
+</body>
+</html>
