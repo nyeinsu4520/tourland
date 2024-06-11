@@ -39,6 +39,14 @@
  	<!-- <div class="invalid-feedback">Please enter a valid item description!</div>
  	<p class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{title}"	 ></p> -->
  	<br>
+ 	<div class="mb-3">
+        <label for="latitude" class="form-label">Latitude:</label>
+        <input type="text" class="form-control" id="latitude" name="latitude">
+    </div>
+    <div class="mb-3">
+        <label for="longitude" class="form-label">Longitude:</label>
+        <input type="text" class="form-control" id="longitude" name="longitude">
+    </div>
  	<input class="form-control text-white bg-primary" type="submit" value="Save"  >
   </form>
   

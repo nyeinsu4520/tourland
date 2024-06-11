@@ -1,0 +1,27 @@
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+public class TripController {
+
+    @Autowired
+    private TripRepository tripRepository;
+
+    @GetMapping("/suggestTrips")
+    public String suggestTrips(@RequestParam String location, @RequestParam int duration, Model model) {
+        // Query trips from the database based on the provided location and duration
+        List<Trip> suggestedTrips = tripRepository.findByLocationAndDuration(location, duration);
+
+        // Optionally, you can further filter or sort the suggested trips based on specific criteria
+        model.addAttribute("suggestedTrips", suggestedTrips);
+
+        return "findtrip";
+    }
+}

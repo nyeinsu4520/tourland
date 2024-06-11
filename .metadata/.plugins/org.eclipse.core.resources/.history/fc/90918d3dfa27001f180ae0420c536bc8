@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/tourland2.png" type="image/png" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css" />
+    
+    <!-- Bootstrap Bundle JS -->
+    <script src="./bootstrap/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+    
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <style>
+      #google_translate_element {
+          display: none;
+      }
+      .card {
+        position: relative;
+    }
+
+    .favorite-icon1 {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+    }
+    .star {
+    font-size: 20px; /* Adjust size as needed */
+    color: gold; /* Filled star color */
+	}
+	
+	.star.empty {
+	    color: gray; /* Empty star color */
+	}
+  </style>
+</head>
+<body>
+
+	
+
+    <!-- Header Fragment -->
+    <div th:replace="Fragment/header"></div>
+
+   
+  
+
+    <!-- Search Section -->
+    <div class="container">
+        <div class="row justify-content-center mt-4">
+       		<div class="col-md-6">
+            <!-- Left Column with Image -->
+            <img src="./image/img/travel.svg" width="500px" class="img-fluid">
+        	</div>
+            <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <!-- Right Column with "Where To?" section -->
+			<div class="text-center">
+			    <h1 class="fw-bold">Where To?</h1>
+			    <div class="input-group mt-4">
+			        <input type="text" class="form-control" placeholder="Search location">
+			        <div class="input-group-append">
+			            <div class="input-group-text bg-white border-0">
+			                <button class="btn btn-primary " type="button">Search</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Package Carousel -->
+    
+    
+	    <!-- Recommended Section -->
+	    <div class="container">
+	    <div class="d-flex justify-content-between align-items-center">
+	        <h3>You might like these</h3>
+	        <a class="nav-link py-1 px-0 m-3 active" href="#" aria-expanded="false">See All</a>
+	    </div>
+	    <p>Popular Trip in Myanmar</p>
+		</div>
+	    <div id="cardCarousel3" class="carousel slide mt-3 pt-5" data-bs-ride="carousel">
+	  <div class="carousel-inner">
+	    <div id="firstFourCards" class="carousel-item active">
+	      <div class="container">
+	        <div class="row">
+	       
+	          
+	          <div th:each="package, iterStat : ${packagelist}" class="col-sm-6 col-md-4 col-lg-3 mb-4" th:if="${iterStat.index < 12}">
+	            
+	            <div class="card">
+	            	<div class="favorite-icon1">
+                       <i class="fa-regular fa-heart" style="color:white"></i>
+                    </div>
+	              <a th:href="@{/package/view/{id} (id=${package.package_id}) }"><img width="260px" height="200px" th:src="@{uploads/packages/{id}/{imageName} (id=${package.package_id},imageName=${package.image})}" /></a>
+	              <div class="card-body">
+	              	<h6>PRIVATE TOUR</h6>
+	                <h5 class="card-title" th:text="${package.title}"></h5>
+	                <p class="card-text" th:text="${package.description}"></p>
+	               
+				    <p>Rating: 
+					    <span th:text="${averageRatings[__${package.package_id}__]}"></span>
+					</p>
+					 <p>Rating:
+        <span th:each="star : ${#numbers.sequence(1, 5)}"
+              th:classappend="${star <= #numbers.sequence(1, averageRatings[package.package_id]) ? 'star' : 'star empty'}">&#9733;</span>
+    </p>
+	                
+            		<p style="font-size:15px"><span class="fw-bold">From MMK</span> <span class="fw-bold" th:text="${package.price}"></span> per person</p>
+	              </div>
+	            </div>
+	          
+	        </div>
+	        </div>
+	      </div>
+	    </div>
+
+		</div>
+	</div>
+    
+    
+
+    
+    
+    
+     
+     
+        <!-- Hotel Carousel -->
+    <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>You might like these</h3>
+        <a class="nav-link py-1 px-0 m-3 active" href="#" aria-expanded="false">See All</a>
+    </div>
+    <p>More Packages to explore in Myanmar</p>
+	</div>
+    <div id="cardCarousel2" class="carousel slide mt-3 pt-5" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div id="firstFourCards" class="carousel-item active">
+      <div class="container">
+        <div class="row">
+          <div th:each="card, iterStat : ${cardlist}" class="col-sm-6 col-md-4 col-lg-3 mb-4" th:if="${iterStat.index < 4}">
+            <div class="card">
+              <img width="260px" height="180px"  th:src="@{uploads/cards/{id}/{imageName} (id=${card.hotel_id},imageName=${card.image})}" />
+              <div class="card-body">
+                <h5 class="card-title" th:text="${card.title}"></h5>
+                <p class="card-text" th:text="${card.description}"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Add more carousel items here -->
+    <div class="carousel-item">
+      <div class="container">
+        <div class="row">
+          <div th:each="card, iterStat : ${cardlist}"  class="col-sm-6 col-md-4 col-lg-3 mb-4" th:if="${iterStat.index >= 4 && iterStat.index < 8}">
+            <div class="card">
+              <img width="260px" height="180px" th:src="@{uploads/cards/{id}/{imageName} (id=${card.hotel_id},imageName=${card.image})}" />
+              <div class="card-body">
+                <h5 class="card-title" th:text="${card.title}"></h5>
+                <p class="card-text" th:text="${card.description}"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Arrow buttons -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel2" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel2" data-bs-slide="next">
+  <span class="visually-hidden">Next</span>
+  </button>
+  </div>
+    
+     
+     
+
+    
+    
+    <!-- Hero Section -->
+    <div class="container col-xxl-8 px-4 py-5">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+            <div class="col-10 col-sm-8 col-lg-6">
+                <img src="./image/img/tourland.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+            </div>
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Responsive left-aligned hero with image</h1>
+                <p class="lead">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Primary</button>
+                    <button type="button" class="btn btn-outline-secondary btn-lg px-4">Default</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+      <!-- Restaurant Section -->
+    <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>You might like these</h3>
+        <a class="nav-link py-1 px-0 m-3 active" href="#" aria-expanded="false">See All</a>
+    </div>
+    <p>More Restaurants to explore in Myanmar</p>
+	</div>
+    <div id="cardCarousel4" class="carousel slide mt-3 pt-5" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div id="firstFourCards" class="carousel-item active">
+      <div class="container">
+        <div class="row">
+          <div th:each="restaurant, iterStat : ${restaurantlist}" class="col-sm-6 col-md-4 col-lg-3 mb-4" th:if="${iterStat.index < 4}">
+            <div class="card">
+              <img width="260px" height="180px"  th:src="@{uploads/restaurants/{id}/{imageName} (id=${restaurant.restaurant_id},imageName=${restaurant.image})}" />
+              <div class="card-body">
+                <h5 class="card-title" th:text="${restaurant.title}"></h5>
+                <p class="card-text" th:text="${restaurant.description}"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Add more carousel items here -->
+    <div class="carousel-item">
+      <div class="container">
+        <div class="row">
+          <div th:each="restaurant, iterStat : ${restaurantlist}"  class="col-sm-6 col-md-4 col-lg-3 mb-4" th:if="${iterStat.index >= 4 && iterStat.index < 8}">
+            <div class="card">
+              <img width="260px" height="180px" th:src="@{uploads/restaurants/{id}/{imageName} (id=${restaurant.restaurant_id},imageName=${restaurant.image})}" />
+              <div class="card-body">
+                <h5 class="card-title" th:text="${restaurant.title}"></h5>
+                <p class="card-text" th:text="${restaurant.description}"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Arrow buttons -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel4" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel4" data-bs-slide="next">
+  <span class="visually-hidden">Next</span>
+  </button>
+  </div>
+    
+    
+
+	
+	
+    
+    <script>
+        $(document).ready(function(){
+            $('#cardCarousel1').carousel();
+            $('#cardCarousel2').carousel();
+            $('#cardCarousel3').carousel();
+            $('#cardCorousel4').carousel();
+        });
+    </script>
+
+    <!-- Footer Fragment -->
+    <div th:replace="Fragment/footer"></div>
+
+</body>
+</html>

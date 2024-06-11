@@ -6,7 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,25 +38,46 @@ public class CardController {
     private RestaurantRespository RestaurantRepo;
 	@Autowired
 	private PackageRepository packageRepo;
+	
 
     @Autowired
     private CardService cardService;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private PackageService packageService;
+    @Autowired
+    private ReviewPackageRepository reviewpackRepo;
     
 
 
 
-	@GetMapping("/index")
+    @GetMapping("/index")
     public String getIndex(Model model) {
         List<Card> cardlist = cardRepo.findAll();
         List<Restaurant> restaurantlist = RestaurantRepo.findAll();
-        List<Package> packagelist=packageRepo.findAll();
+        List<Package> packagelist = packageRepo.findAll();
+        List<ReviewPackage> reviewpackagelist = reviewpackRepo.findAll();
+
+        // Calculate average ratings
+        Map<Integer, Double> averageRatings = new HashMap<>();
+        for (Package pkg : packagelist) {
+            double avgRating = pkg.getReviewspackage().stream()
+                .mapToInt(ReviewPackage::getRating)
+                .average()
+                .orElse(0.0);
+            averageRatings.put(pkg.getPackage_id(), avgRating);
+        }
+
         model.addAttribute("cardlist", cardlist);
         model.addAttribute("restaurantlist", restaurantlist);
-        model.addAttribute("packagelist",packagelist);
+        model.addAttribute("packagelist", packagelist);
+        model.addAttribute("reviewpackagelist", reviewpackagelist);
+        model.addAttribute("averageRatings", averageRatings);
+
         return "index";
     }
+
 	
 	 @GetMapping("/cards")
 	    public String getAllHotels(Model model) {
@@ -63,8 +86,15 @@ public class CardController {
 	        return "hoteldetails";
 	    }
 	 
+	 @PostMapping("/cards")
+	    public String createHotel(@ModelAttribute Card card) {
+	        cardService.save(card);
+	        return "redirect:/cards";
+	    }
 	 
-	 @GetMapping("/cards/{id}")
+	 
+	 
+	 @GetMapping("/cards/review/{id}")
 	 public String getCardById(@PathVariable Integer id, Model model, Principal principal) {
 	     Optional<Card> cardOptional = cardService.findById(id);
 	     if (cardOptional.isPresent()) {
@@ -92,11 +122,7 @@ public class CardController {
 
 	 
 	
-	 @PostMapping("/cards")
-	    public String createHotel(@ModelAttribute Card card) {
-	        cardService.save(card);
-	        return "redirect:/cards";
-	    }
+	
 
 	 @PostMapping("/cards/{id}/reviews")
 	 public String addReview(@PathVariable Integer id, @RequestParam String comment, @RequestParam int rating, Principal principal) {
@@ -113,16 +139,10 @@ public class CardController {
 	             cardService.save(card);
 	         }
 	     }
-	     return "redirect:/cards/" + id;
+	     return "redirect:/cards/review/" + id;
 	 }
 
 
-
-
-
-
-
-	 
 
 	
 	@GetMapping("/cards/add")
@@ -135,7 +155,7 @@ public class CardController {
 	
 	
 	@PostMapping("/cards/save")
-	public String saveItem(@Valid Card card,BindingResult bindingResult, @RequestParam("cardImage") MultipartFile imgFile,Model model) {
+	public String saveItem(@Valid Card card,BindingResult bindingResult, @RequestParam("cardImage") MultipartFile imgFile,@RequestParam double latitude, @RequestParam double longitude,Model model) {
 	if(bindingResult.hasErrors()) {
 		List<Card> cardlist=cardRepo.findAll();
 		model.addAttribute("cardlist",cardlist);
@@ -254,6 +274,59 @@ public class CardController {
 	}
 	packageRepo.save(packageObj);
 	return "redirect:/index";
+	}
+	
+	@GetMapping("/package/review/{id}")
+	public String getPackageById(@PathVariable Integer id, Model model, Principal principal) {
+	    Optional<Package> packageOptional = packageService.findById(id);
+	    if (packageOptional.isPresent()) {
+	        Package packageObj = packageOptional.get();
+	        List<ReviewPackage> reviewspackage = packageObj.getReviewspackage(); // Fetch package reviews
+	        
+	        // Get the logged-in member's ID
+	        String loggedInMemberId = "";
+	        if (principal != null) {
+	            // Retrieve the username from the principal
+	            String username = principal.getName();
+	            // Use the username to find the member ID
+	            String memberId = memberService.findIdByUsername(username);
+	            if (memberId != null) {
+	                loggedInMemberId = memberId;
+	            }
+	        }
+	        
+	        model.addAttribute("package", packageObj);
+	        model.addAttribute("reviewspackage", reviewspackage); // Add reviews to the model
+	        model.addAttribute("loggedInMemberId", loggedInMemberId);
+	    }
+	    return "packagerating";
+	}
+
+	 @PostMapping("/package/{id}/reviews")
+	 public String addReviewpackage(@PathVariable Integer id, @RequestParam String comment, @RequestParam int rating, Principal principal) {
+	     Optional<Package> packageOpt = packageService.findById(id);
+	     if (packageOpt.isPresent() && principal != null) {
+	         String username = principal.getName();
+	         Member member = memberService.findByUsername(username); // Fetch the logged-in member
+	         if (member != null) {
+	             Package packageObj = packageOpt.get();
+	             ReviewPackage reviewpackage = new ReviewPackage(comment, rating);
+	             reviewpackage.setMember(member); // Associate the comment with the logged-in member
+	             reviewpackage.setPackageObj(packageObj);
+	             packageObj.getReviewspackage().add(reviewpackage);
+	             packageService.save(packageObj);
+	         }
+	     }
+	     return "redirect:/package/review/" + id;
+	 }
+
+	 
+	
+	@GetMapping("/package/view/{id}")
+	public String viewsingle(@PathVariable("id") Integer id,Model model) {
+		Package packageObj=packageRepo.getReferenceById(id);
+		model.addAttribute("packageobj",packageObj);
+		return "PackageDetails";
 	}
 	
 	

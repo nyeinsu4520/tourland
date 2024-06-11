@@ -42,7 +42,7 @@ public class WebSecurityConfig {
 				.requestMatchers("/bootstrap//").permitAll()
 				.requestMatchers("/images/*").permitAll()				
 				.anyRequest().authenticated())	
-				.formLogin((form) -> form.permitAll())
+				.formLogin((form) -> form.permitAll().defaultSuccessUrl("/index",true))
 				//.formLogin().loginPage("/login").permitAll()
 				
 				.logout((logout) -> logout.permitAll())	
