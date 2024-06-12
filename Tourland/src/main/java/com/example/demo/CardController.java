@@ -321,14 +321,31 @@ public class CardController {
 	 }
 
 	 
-	
-	@GetMapping("/package/view/{id}")
-	public String viewsingle(@PathVariable("id") Integer id,Model model) {
-		Package packageObj=packageRepo.getReferenceById(id);
-		model.addAttribute("packageobj",packageObj);
-		return "PackageDetails";
-	}
-	
+	 @GetMapping("/package/view/{id}")
+	 public String viewsingle(@PathVariable("id") Integer id, Model model) {
+	     Optional<Package> packageOpt = packageRepo.findById(id);
+	     if (packageOpt.isPresent()) {
+	         Package packageObj = packageOpt.get();
+	         model.addAttribute("packageObj", packageObj);
+
+	         // Calculate average rating
+	         double avgRating = packageObj.getReviewspackage().stream()
+	             .mapToInt(ReviewPackage::getRating)
+	             .average()
+	             .orElse(0.0);
+
+	         // Get the number of reviews
+	         int reviewCount = packageObj.getReviewspackage().size();
+
+	         model.addAttribute("averageRating", avgRating);
+	         model.addAttribute("reviewCount", reviewCount);
+
+	         return "PackageDetails";
+	     } else {
+	         return "redirect:/error"; // Redirect or show error if package not found
+	     }
+	 }
+
 	
 
 }
