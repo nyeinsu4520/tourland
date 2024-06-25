@@ -1,0 +1,57 @@
+package com.example.demo;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.example.demo.Booking;
+import com.example.demo.Member;
+import com.example.demo.BookingRepository;
+import com.example.demo.MemberRepository;
+import com.example.demo.Package;
+import com.example.demo.PackageRepository;
+
+@Controller
+public class AdminDashboardController {
+
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @GetMapping("/admin/bookings")
+    public String adminDashboard(Model model) {
+        List<Booking> bookings = bookingRepository.findAll();
+        model.addAttribute("bookings", bookings);
+        return "adminDashboard";
+    }
+
+    @PostMapping("/admin/bookings/{bookingId}/confirm")
+    public String confirmBooking(@PathVariable int bookingId) {
+        Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
+        if (optionalBooking.isPresent()) {
+            Booking booking = optionalBooking.get();
+            booking.setStatus(Booking.Status.CONFIRMED);
+            bookingRepository.save(booking);
+            // Add additional logic or notifications as needed
+        }
+        return "redirect:/admin/bookings";
+    }
+
+    @PostMapping("/admin/bookings/{bookingId}/reject")
+    public String rejectBooking(@PathVariable int bookingId) {
+        Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
+        if (optionalBooking.isPresent()) {
+            Booking booking = optionalBooking.get();
+            booking.setStatus(Booking.Status.REJECTED);
+            bookingRepository.save(booking);
+            // Add additional logic or notifications as needed
+        }
+        return "redirect:/admin/bookings";
+    }
+}
+

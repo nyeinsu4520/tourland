@@ -1,0 +1,71 @@
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@Controller
+public class AdminDashboardController {
+
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    @Autowired
+    private BookingService bookingService; // Assuming you have a BookingService
+
+    @PostMapping("/admin/bookings/{bookingId}/confirm")
+    public String confirmBooking(@PathVariable int bookingId) {
+        Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
+        if (optionalBooking.isPresent()) {
+            Booking booking = optionalBooking.get();
+            booking.setStatus(Booking.Status.CONFIRMED);
+            bookingRepository.save(booking);
+
+            // Notify user about confirmation
+            String recipient = booking.getEmail();
+            String message = "Your booking with ID " + booking.getBooking_id() + " has been confirmed.";
+            Notification notification = new Notification(message, recipient);
+            notificationRepository.save(notification);
+        } else {
+            // Handle the case where the booking with the given ID is not found
+            // For example, redirect or show an error message
+        }
+        return "redirect:/admin/bookings";
+    }
+
+    @PostMapping("/admin/bookings/{bookingId}/reject")
+    public String rejectBooking(@PathVariable int bookingId) {
+        Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
+        if (optionalBooking.isPresent()) {
+            Booking booking = optionalBooking.get();
+            booking.setStatus(Booking.Status.REJECTED);
+            bookingRepository.save(booking);
+
+            // Notify user about rejection
+            String recipient = booking.getEmail();
+            String message = "Your booking with ID " + booking.getBooking_id() + " has been rejected.";
+            Notification notification = new Notification(message, recipient);
+            notificationRepository.save(notification);
+        } else {
+            // Handle the case where the booking with the given ID is not found
+            // For example, redirect or show an error message
+        }
+        return "redirect:/admin/bookings";
+    }
+
+    @GetMapping("/admin/bookings")
+    public String adminDashboard(Model model) {
+        List<Booking> bookings = bookingRepository.findAll();
+        model.addAttribute("bookings", bookings);
+        return "adminDashboard";
+    }
+}

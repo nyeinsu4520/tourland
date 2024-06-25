@@ -1,0 +1,29 @@
+package com.example.demo;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+@Controller
+public class NotificationController {
+
+    @Autowired
+    private BookingRepository bookingRepository; // Autowire BookingRepository
+    
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    @GetMapping("/notify/{bookingId}")
+    public String notifyUser(@PathVariable int bookingId, Model model) {
+    	// Notify user about confirmation
+        String recipient = booking.getEmail();
+        String message = "Your booking with ID " + booking.getBooking_id() + " has been confirmed.";
+        Notification notification = new Notification(message, recipient);
+        notificationRepository.save(notification);
+        return "redirect:/admin/bookings"; // Redirect to admin dashboard if booking not found
+    }
+}

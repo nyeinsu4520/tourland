@@ -1,0 +1,69 @@
+package com.example.demo;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import jakarta.validation.Valid;
+
+@Controller
+public class BookingController {
+
+	
+	@Autowired
+    private BookingRepository bookingPackageRepo;
+	@Autowired 
+	private PackageRepository packageRepo;
+	@Autowired
+	private bookingservice bookingservice;
+	
+	
+	@GetMapping("/booking/submit")
+	public String viewCategories(Model model) {
+		
+		List<Booking> bookingpackageList=bookingPackageRepo.findAll();// select *from category
+		model.addAttribute("bookingpackageList",bookingpackageList);
+		return "bookingConfirmation";
+	}
+	
+	
+	
+	
+	@PostMapping("/bookings/submit")
+	public ModelAndView submitBooking(
+	        @RequestParam("name") String name,
+	        @RequestParam("email") String email,
+	        @RequestParam("country") String country,
+	        @RequestParam("phone") String phone,
+	        @RequestParam("notes") String notes,
+	        @RequestParam("selectedDate") String selectedDate,
+	        @RequestParam("selectedPassengers") int selectedPassengers) {
+
+	    // Create a new Booking object and populate it
+	    Booking booking = new Booking();
+	    booking.setName(name);
+	    booking.setEmail(email);
+	    booking.setCountry(country);
+	    booking.setPhone(phone);
+	    booking.setNotes(notes);
+	    booking.setSelectedDate(LocalDate.parse(selectedDate));
+	    booking.setSelectedPassengers(selectedPassengers);
+
+	    // Save the booking using the service
+	    bookingservice.save(booking);
+
+	    // Prepare a ModelAndView for success view
+	    ModelAndView modelAndView = new ModelAndView();
+	    modelAndView.setViewName("submitSuccess");
+	    modelAndView.addObject("message", "Booking successful!");
+	    return modelAndView;
+	}
+
+}
