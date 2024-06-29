@@ -1,9 +1,12 @@
 package com.example.demo;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -34,6 +37,10 @@ public class Member {
 	
 	
 	private String role;
+	
+	@OneToMany(mappedBy = "member")
+	private List<Notification> notifications;
+
 	
 	public int getId() {
 		return id;

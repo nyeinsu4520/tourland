@@ -1,0 +1,47 @@
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+public class TripPackageService {
+
+    @Autowired
+    private TripPackageRepository tripPackageRepository;
+
+    @Autowired
+    private CardRepository hotelRepository;
+
+    @Autowired
+    private RestaurantRespository restaurantRepository;
+
+    @Autowired
+    private HotelSelectionRepository hotelSelectionRepository;
+
+    @Autowired
+    private RestaurantSelectionRepository restaurantSelectionRepository;
+
+    @Transactional
+    public void createTripPackage(TripPackage tripPackage, List<Integer> selectedHotels, List<Integer> selectedRestaurants) {
+        tripPackageRepository.save(tripPackage);
+
+        for (Integer hotelId : selectedHotels) {
+            Card hotel = hotelRepository.findById(hotelId).orElseThrow();
+            HotelSelection hotelSelection = new HotelSelection();
+            hotelSelection.setTripPackage(tripPackage);
+            hotelSelection.setHotel(hotel);
+            hotelSelectionRepository.save(hotelSelection);
+        }
+
+        for (Integer restaurantId : selectedRestaurants) {
+            Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
+            RestaurantSelection restaurantSelection = new RestaurantSelection();
+            restaurantSelection.setTripPackage(tripPackage);
+            restaurantSelection.setRestaurant(restaurant);
+            restaurantSelectionRepository.save(restaurantSelection);
+        }
+    }
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Trip Package</title>
+</head>
+<body>
+    <form th:action="@{/admin/trip-packages/create}" th:object="${tripPackage}" method="post">
+    <!-- Basic trip package details -->
+    
+    <label>Select Hotel:
+        <select th:field="*{selectedHotel}" multiple="multiple">
+            <option th:each="hotel : ${hotels}" th:value="${hotel.id}" th:text="${hotel.name}"></option>
+        </select>
+    </label><br/>
+    
+    <label>Select Restaurant:
+        <select th:field="*{selectedRestaurant}" multiple="multiple">
+            <option th:each="restaurant : ${restaurants}" th:value="${restaurant.id}" th:text="${restaurant.name}"></option>
+        </select>
+    </label><br/>
+    
+    <!-- Additional fields and submit button -->
+    
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

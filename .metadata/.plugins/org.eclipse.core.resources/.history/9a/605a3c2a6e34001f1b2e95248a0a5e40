@@ -1,0 +1,44 @@
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminselectController {
+
+    @Autowired
+    private CardRepository hotelRepository;
+
+    @Autowired
+    private RestaurantRespository restaurantRepository;
+
+    @GetMapping("/manage-availability")
+    public String showManageAvailabilityPage(Model model) {
+        List<Card> hotels = hotelRepository.findAll();
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+
+        model.addAttribute("hotels", hotels);
+        model.addAttribute("restaurants", restaurants);
+
+        return "admin/manageAvailability";
+    }
+
+    @PostMapping("/update-availability")
+    public String updateAvailability(@RequestParam List<Long> availableHotels, @RequestParam List<Long> availableRestaurants) {
+        hotelRepository.updateAllToUnavailable();
+        hotelRepository.updateAvailability(availableHotels);
+
+        restaurantRepository.updateAllToUnavailable();
+        restaurantRepository.updateAvailability(availableRestaurants);
+
+        return "redirect:/admin/manage-availability";
+    }
+}

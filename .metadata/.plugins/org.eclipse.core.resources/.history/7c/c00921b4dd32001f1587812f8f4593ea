@@ -1,0 +1,51 @@
+package com.example.demo;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+@Controller
+public class NotificationController {
+
+    @Autowired
+    private BookingRepository bookingRepository; // Autowire BookingRepository
+	@Autowired
+	private NotificationRepository NotificationRepository;
+	@Autowired
+	private MemberService MemberService;
+	@Autowired
+	private NotificationService NotificationService;
+	
+    
+
+	@GetMapping("/notifications")
+    public String showNotifications(Model model) {
+        Integer memberId = MemberService.getLoggedInMemberId();
+
+        if (memberId != null) {
+            List<Notification> notifications = NotificationRepository.findByMemberIdOrderByTimestampDesc(memberId);
+            model.addAttribute("notifications", notifications);
+        }
+
+        return "notipage"; // Ensure this template exists
+    }
+
+    @PostMapping("/confirmBooking")
+    public String confirmBooking(/* parameters */) {
+        // Logic to confirm the booking
+
+        // Create notification
+        Integer memberId = MemberService.getLoggedInMemberId();
+        if (memberId != null) {
+            NotificationService.createNotification("Booking confirmed", memberId);
+        }
+
+        return "notipage"; // Redirect to the appropriate page
+    }
+}

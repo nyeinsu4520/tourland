@@ -1,0 +1,70 @@
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
+
+@Controller
+public class NotificationController {
+
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    @Autowired
+    private MemberService memberService;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @GetMapping("/notifications")
+    public String showNotifications(Model model) {
+        Integer memberId = memberService.getLoggedInMemberId();
+
+        if (memberId != null) {
+            List<Notification> notifications = notificationRepository.findByMemberIdOrderByTimestampDesc(memberId);
+            model.addAttribute("notifications", notifications);
+        }
+
+        return "notipage"; // Ensure this template exists
+    }
+
+    @PostMapping("/admin/bookings/{bookingId}/confirm")
+    public String confirmBooking(@PathVariable int bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                                           .orElseThrow(() -> new IllegalArgumentException("Invalid booking Id:" + bookingId));
+        booking.setStatus(Booking.Status.CONFIRMED);
+        bookingRepository.save(booking);
+
+        // Notify user about confirmation
+        Integer memberId = memberService.getLoggedInMemberId();
+        if (memberId != null) {
+            notificationService.createNotification("Your booking with ID " + booking.getBooking_id() + " has been confirmed.", memberId);
+        }
+
+        return "redirect:/admin/bookings";
+    }
+
+    @PostMapping("/admin/bookings/{bookingId}/reject")
+    public String rejectBooking(@PathVariable int bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                                           .orElseThrow(() -> new IllegalArgumentException("Invalid booking Id:" + bookingId));
+        booking.setStatus(Booking.Status.REJECTED);
+        bookingRepository.save(booking);
+
+        // Notify user about rejection
+        Integer memberId = memberService.getLoggedInMemberId();
+        if (memberId != null) {
+            notificationService.createNotification("Your booking with ID " + booking.getBooking_id() + " has been rejected.", memberId);
+        }
+
+        return "redirect:/admin/bookings";
+    }
+}

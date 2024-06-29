@@ -1,0 +1,29 @@
+package com.example.demo;
+
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
+import jakarta.transaction.Transactional;
+
+public interface CardRepository extends JpaRepository<Card, Integer> {
+	
+    @Modifying
+    @Transactional
+    @Query("UPDATE Card h SET h.availableForAdmin = false")
+    void updateAllToUnavailable();
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Card h SET h.availableForAdmin = true WHERE h.id IN (:hotelIds)")
+    void updateAvailability(List<Long> hotelIds);
+
+    @Query("SELECT h FROM Card h WHERE h.availableForAdmin = true")
+    List<Card> findAvailableHotelsForAdmin();
+    
+    List<Card> findByAvailableForAdminAndStartDateBeforeAndEndDateAfter(boolean availableForAdmin, LocalDate startDate, LocalDate endDate);
+}

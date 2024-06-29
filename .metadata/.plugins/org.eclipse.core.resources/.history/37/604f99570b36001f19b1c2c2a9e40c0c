@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Trip Package</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script>
+        function loadHotelsAndRestaurants() {
+            var tripPackageId = $('#tripPackageId').val();
+            if (tripPackageId) {
+                $.get('/trip-packages/' + tripPackageId + '/hotels', function(data) {
+                    var hotelSelect = $('#hotelSelect select');
+                    hotelSelect.empty();
+                    data.forEach(function(hotel) {
+                        hotelSelect.append('<option value="' + hotel.id + '">' + hotel.title + '</option>');
+                    });
+                });
+                
+                $.get('/trip-packages/' + tripPackageId + '/restaurants', function(data) {
+                    var restaurantSelect = $('#restaurantSelect select');
+                    restaurantSelect.empty();
+                    data.forEach(function(restaurant) {
+                        restaurantSelect.append('<option value="' + restaurant.id + '">' + restaurant.title + '</option>');
+                    });
+                });
+            }
+        }
+
+        $(document).ready(function() {
+            $('#tripPackageId').change(loadHotelsAndRestaurants);
+        });
+    </script>
+</head>
+<body>
+    <h2>Book Trip Package</h2>
+    
+    <form th:action="@{/trip-packages/book}" method="post">
+        <!-- Select Trip Package -->
+        <label>Select Trip Package:</label>
+        <select id="tripPackageId" name="tripPackageId">
+            <option th:each="tripPackage : ${tripPackages}"
+                    th:value="${tripPackage.id}"
+                    th:text="${tripPackage.name}"></option>
+        </select>
+        <br/>
+        
+        <!-- Select Hotel -->
+        <label>Select Hotel:</label>
+        <div id="hotelSelect">
+            <select name="hotelId">
+                <option value="">-- Select a Trip Package First --</option>
+            </select>
+        </div>
+        <br/>
+        
+        <!-- Select Restaurant -->
+        <label>Select Restaurant:</label>
+        <div id="restaurantSelect">
+            <select name="restaurantId">
+                <option value="">-- Select a Trip Package First --</option>
+            </select>
+        </div>
+        <br/>
+        
+        <button type="submit">Book Trip Package</button>
+    </form>
+</body>
+</html>

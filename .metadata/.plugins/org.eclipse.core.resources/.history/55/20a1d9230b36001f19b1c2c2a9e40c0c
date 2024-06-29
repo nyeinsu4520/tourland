@@ -1,0 +1,38 @@
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class TripPackageService {
+
+    @Autowired
+    private TripPackageRepository tripPackageRepository;
+
+    @Autowired
+    private CardRepository hotelRepository;
+
+    @Autowired
+    private RestaurantRespository restaurantRepository;
+
+    public List<TripPackage> getAllTripPackages() {
+        return tripPackageRepository.findAll();
+    }
+
+    public List<Card> getHotelsByTripPackage(Long tripPackageId) {
+        return tripPackageRepository.findById(tripPackageId)
+            .map(TripPackage::getHotels)
+            .map(ArrayList::new) // Use ArrayList as an implementation
+            .orElse(new ArrayList<>()); // Return an empty ArrayList if not found
+    }
+
+    public List<Restaurant> getRestaurantsByTripPackage(Long tripPackageId) {
+        return tripPackageRepository.findById(tripPackageId)
+            .map(TripPackage::getRestaurants)
+            .map(ArrayList::new) // Use ArrayList as an implementation
+            .orElse(new ArrayList<>()); // Return an empty ArrayList if not found
+    }
+}

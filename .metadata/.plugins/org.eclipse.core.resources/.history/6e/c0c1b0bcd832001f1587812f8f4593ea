@@ -1,0 +1,30 @@
+package com.example.demo;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+@Controller
+public class NotificationController {
+
+    @Autowired
+    private BookingRepository bookingRepository; // Autowire BookingRepository
+	@Autowired
+	private NotificationRepository NotificationRepository;
+	@Autowired
+	private MemberService MemberService;
+	
+    
+	 @GetMapping("/notifications")
+	    public String showNotifications(Model model) {
+	        Integer memberId = MemberService.getLoggedInMemberId().intValue(); // Convert Long to Integer if needed
+	        List<Notification> notifications = NotificationRepository.findByMemberIdOrderByTimestampDesc(memberId);
+	        model.addAttribute("notifications", notifications);
+	        return "notifications"; // This corresponds to notifications.html
+	    }
+}

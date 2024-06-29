@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Trip Package</title>
+</head>
+<body>
+    <h2>Book Trip Package</h2>
+    
+    <form th:action="@{/book}" method="post">
+        <!-- Select Trip Package -->
+        <label>Select Trip Package:</label>
+        <select name="tripPackageId">
+            <option th:each="tripPackage : ${tripPackages}"
+                    th:value="${tripPackage.id}"
+                    th:text="${tripPackage.name}"></option>
+        </select>
+        <br/>
+        
+        <!-- Select Hotel -->
+        <label>Select Hotel:</label>
+        <select name="hotelId">
+            <option th:each="hotel : ${selectedTripPackage.hotels}"
+                    th:value="${hotel.id}"
+                    th:text="${hotel.title}">
+                    <img width="260px" height="180px"  th:src="@{uploads/cards/{id}/{imageName} (id=${hotel.hotel_id},imageName=${hotel.image})}" />
+              </option>
+        </select>
+        <br/>
+        
+        <!-- Select Restaurant -->
+        <label>Select Restaurant:</label>
+        <select name="restaurantId">
+            <option th:each="restaurant : ${selectedTripPackage.restaurants}"
+                    th:value="${restaurant.id}"
+                    th:text="${restaurant.title}"></option>
+        </select>
+        <br/>
+        
+        <button type="submit">Book Trip Package</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,32 @@
+package com.example.demo;
+
+import java.time.LocalDateTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class NotificationService {
+
+	    @Autowired
+	    private NotificationRepository notificationRepository;
+	    
+	    @Autowired
+	    private MemberRepository MemberRepository;
+
+	    @Autowired
+	    private MemberService memberService;
+
+	    public void createNotification(String message, String recipient, Integer memberId) {
+	        Member member = MemberRepository.findById(memberId).orElse(null);
+
+	        if (member != null) {
+	            Notification notification = new Notification();
+	            notification.setMessage(message);
+	            notification.setRecipient(recipient);
+	            notification.setMember(member);
+
+	            notificationRepository.save(notification);
+	        }
+	    }
+	}

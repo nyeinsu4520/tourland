@@ -18,4 +18,5 @@ public class bookingservice {
     public void save(Booking booking) {
         bookingRepository.save(booking);
     }
+ 
 }

@@ -1,0 +1,72 @@
+package com.example.demo;
+
+import jakarta.persistence.*;
+import java.util.List;
+
+@Entity
+public class TripPackage {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String title;
+    private String description;
+    private double price;
+
+    @OneToMany(mappedBy = "tripPackage", cascade = CascadeType.ALL)
+    private List<HotelSelection> selectedHotels;
+
+    @OneToMany(mappedBy = "tripPackage", cascade = CascadeType.ALL)
+    private List<RestaurantSelection> selectedRestaurants;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public List<HotelSelection> getSelectedHotels() {
+		return selectedHotels;
+	}
+
+	public void setSelectedHotels(List<HotelSelection> selectedHotels) {
+		this.selectedHotels = selectedHotels;
+	}
+
+	public List<RestaurantSelection> getSelectedRestaurants() {
+		return selectedRestaurants;
+	}
+
+	public void setSelectedRestaurants(List<RestaurantSelection> selectedRestaurants) {
+		this.selectedRestaurants = selectedRestaurants;
+	}
+
+    // getters and setters
+    
+}
+

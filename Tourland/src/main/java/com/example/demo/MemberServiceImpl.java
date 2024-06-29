@@ -1,8 +1,11 @@
 package com.example.demo;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -26,5 +29,13 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findByUsername(name);
     }
 
-    // You can implement more methods here for other operations related to members
+    public Integer getLoggedInMemberId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            Member member = memberRepository.findByUsername(username);
+            return member != null ? member.getId() : null;
+        }
+        return null;
+    }
 }

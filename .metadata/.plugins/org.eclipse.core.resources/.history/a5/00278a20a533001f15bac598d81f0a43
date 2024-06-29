@@ -1,0 +1,58 @@
+package com.example.demo;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class HotelSelection {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "package_id")
+    private Package packageObj;
+
+
+    @ManyToOne
+    @JoinColumn(name = "hotel_id")
+    private Card card;
+
+    // Constructors
+    public HotelSelection() {}
+
+    public HotelSelection(Package packageObj, Card hotel) {
+        this.packageObj = packageObj;
+        this.card = card;
+    }
+
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Package getPackageObj() {
+        return packageObj;
+    }
+
+    public void setPackageObj(Package packageObj) {
+        this.packageObj = packageObj;
+    }
+
+    public Card getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Card hotel) {
+        this.hotel = hotel;
+    }
+}

@@ -34,22 +34,7 @@ public class Package {
 	@OneToMany(mappedBy = "pkg", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings = new ArrayList<>();
     
-    
-    @ManyToMany
-    @JoinTable(
-        name = "package_hotel",
-        joinColumns = @JoinColumn(name = "package_id"),
-        inverseJoinColumns = @JoinColumn(name = "hotel_id")
-    )
-    private List<Card> cards;
-
-    @ManyToMany
-    @JoinTable(
-        name = "package_restaurant",
-        joinColumns = @JoinColumn(name = "package_id"),
-        inverseJoinColumns = @JoinColumn(name = "restaurant_id")
-    )
-    private List<Restaurant> restaurants;
+   
     
     
     
@@ -125,22 +110,6 @@ public class Package {
 
 	public void setBookings(List<Booking> bookings) {
 		this.bookings = bookings;
-	}
-
-	public List<Card> getCards() {
-		return cards;
-	}
-
-	public void setCards(List<Card> cards) {
-		this.cards = cards;
-	}
-
-	public List<Restaurant> getRestaurants() {
-		return restaurants;
-	}
-
-	public void setRestaurants(List<Restaurant> restaurants) {
-		this.restaurants = restaurants;
 	}
 
 	public Member getMember() {

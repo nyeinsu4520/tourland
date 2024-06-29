@@ -1,0 +1,21 @@
+package com.example.demo;
+
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RestaurantRespository extends JpaRepository<Restaurant, Integer> {
+	
+	
+    @Modifying
+    @Transactional
+    @Query("UPDATE Restaurant r SET r.availableForAdmin = false")
+    void updateAllToUnavailable();
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Restaurant r SET r.availableForAdmin = true WHERE r.id IN (:restaurantIds)")
+    void updateAvailability(List<Long> restaurantIds);
+
+    @Query("SELECT r FROM Restaurant r WHERE r.availableForAdmin = true")
+    List<Restaurant> findAvailableRestaurantsForAdmin();
+}

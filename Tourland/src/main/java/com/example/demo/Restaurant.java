@@ -1,9 +1,18 @@
 package com.example.demo;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Restaurant {
@@ -16,6 +25,19 @@ public class Restaurant {
     private String location;
 	private String image;
     private int price;
+    private String cuisineType;
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
+    
+    @ManyToOne
+    @JoinColumn(name = "trip_package_id")
+    private TripPackage tripPackage;
+    
+
     
     
   //constructors
@@ -71,5 +93,32 @@ public class Restaurant {
 		this.price = price;
 	}
 
+
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getCuisineType() {
+		return cuisineType;
+	}
+
+	public void setCuisineType(String cuisineType) {
+		this.cuisineType = cuisineType;
+	}
+	
+	
     
 }

@@ -1,0 +1,23 @@
+package com.example.demo.controller;
+
+import com.example.demo.service.PackageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/packages")
+public class PackageController {
+
+    @Autowired
+    private PackageService packageService;
+
+    @PostMapping("/{packageId}/hotels/{hotelId}")
+    public void addHotelToPackage(@PathVariable int packageId, @PathVariable int hotelId) {
+        packageService.addHotelToPackage(packageId, hotelId);
+    }
+
+    @PostMapping("/{packageId}/restaurants/{restaurantId}")
+    public void addRestaurantToPackage(@PathVariable int packageId, @PathVariable int restaurantId) {
+        packageService.addRestaurantToPackage(packageId, restaurantId);
+    }
+}

@@ -1,6 +1,9 @@
 package com.example.demo;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -23,25 +26,43 @@ public class Card {
     private String location;
     private String image;
 	private int price;
-	private double latitude;
-	private double longitude;
+	private String roomType;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
     
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
 	
-	public double getLatitude() {
-		return latitude;
+    
+
+    @ManyToOne
+    @JoinColumn(name = "trip_package_id")
+    private TripPackage tripPackage;
+	
+
+	public String getRoomType() {
+		return roomType;
 	}
 
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
 	}
 
-	public double getLongitude() {
-		return longitude;
+
+
+	public List<ReviewHotel> getReviewHotel() {
+		return ReviewHotel;
 	}
 
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
+	public void setReviewHotel(List<ReviewHotel> reviewHotel) {
+		ReviewHotel = reviewHotel;
 	}
+
+	@OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    private List<ReviewHotel> ReviewHotel;
+
+
+
 
 	@OneToMany(mappedBy = "card" ,cascade=CascadeType.ALL)
 	private List<ReviewHotel> reviewshotel;
@@ -121,5 +142,23 @@ public class Card {
 	public void setPrice(int price) {
 		this.price = price;
 	}
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+	}
+	
+	
     
 }

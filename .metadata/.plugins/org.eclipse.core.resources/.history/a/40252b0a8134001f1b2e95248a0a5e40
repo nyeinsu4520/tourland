@@ -1,0 +1,30 @@
+package com.example.demo;
+
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
+import jakarta.transaction.Transactional;
+
+public interface RestaurantRespository extends JpaRepository<Restaurant, Integer> {
+	
+	
+    @Modifying
+    @Transactional
+    @Query("UPDATE Restaurant r SET r.availableForAdmin = false")
+    void updateAllToUnavailable();
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Restaurant r SET r.availableForAdmin = true WHERE r.id IN (:restaurantIds)")
+    void updateAvailability(List<Long> restaurantIds);
+
+    @Query("SELECT r FROM Restaurant r WHERE r.availableForAdmin = true")
+    List<Restaurant> findAvailableRestaurantsForAdmin();
+    
+    List<Restaurant> findByAvailableForAdminAndStartDateBeforeAndEndDateAfter(boolean availableForAdmin, LocalDate startDate, LocalDate endDate);
+}

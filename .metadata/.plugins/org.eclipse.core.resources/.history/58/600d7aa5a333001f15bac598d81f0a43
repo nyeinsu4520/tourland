@@ -1,0 +1,62 @@
+package com.example.demo;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PackageService {
+
+    @Autowired
+    private PackageRepository packageRepository;
+
+    @Autowired
+    private RestaurantRespository restaurantRepo;
+
+    @Autowired
+    private HotelSelectionRepository hotelSelectionRepo;
+
+    @Autowired
+    private RestaurantRespository restaurantSelectionRepo;
+
+    @Autowired
+    private CardRepository cardRepository;
+
+    public List<Package> findAll() {
+        return packageRepository.findAll();
+    }
+
+    public Optional<Package> findById(Integer id) {
+        return packageRepository.findById(id);
+    }
+
+    public Package save(Package packageObj) {
+        return packageRepository.save(packageObj);
+    }
+
+    public void deleteById(Integer id) {
+        packageRepository.deleteById(id);
+    }
+
+    public void addHotelToPackage(int packageId, int hotelId) {
+        Package packageObj = packageRepository.findById(packageId)
+                .orElseThrow(() -> new RuntimeException("Package not found"));
+        Card hotel = cardRepository.findById(hotelId)
+                .orElseThrow(() -> new RuntimeException("Hotel not found"));
+
+        HotelSelection hotelSelection = new HotelSelection(packageObj, hotel);
+        hotelSelectionRepo.save(hotelSelection);
+    }
+
+    public void addRestaurantToPackage(int packageId, int restaurantId) {
+        Package packageObj = packageRepository.findById(packageId)
+                .orElseThrow(() -> new RuntimeException("Package not found"));
+        Restaurant restaurant = restaurantRepo.findById(restaurantId)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+
+        RestaurantSelection restaurantSelection = new RestaurantSelection(packageObj, restaurant);
+        restaurantSelectionRepo.save(restaurantSelection);
+    }
+}
