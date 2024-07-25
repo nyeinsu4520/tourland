@@ -19,4 +19,6 @@ public class MemberDetailsService implements UserDetailsService{
 	
 		return new MemberDetails(member);
 	}
+	
+	
 }

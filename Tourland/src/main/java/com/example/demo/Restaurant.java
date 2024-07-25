@@ -3,10 +3,13 @@ package com.example.demo;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.annotation.Transient;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,31 +27,57 @@ public class Restaurant {
     private String description;
     private String location;
 	private String image;
-    private int price;
-    private String cuisineType;
+    private String restaurantType;
+    private String address;
     
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
     
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate endDate;
-    
-    @ManyToOne
+    @Transient
+    private Double averageRating;
+
+
+
+
+	@ManyToOne
     @JoinColumn(name = "trip_package_id")
     private TripPackage tripPackage;
     
+    
+
+	public Double getAverageRating() {
+		return averageRating;
+	}
+
+	public void setAverageRating(Double averageRating) {
+		this.averageRating = averageRating;
+	}
+
+
+
+	@OneToMany(mappedBy = "restaurant" ,cascade=CascadeType.ALL)
+	private List<ReviewRestaurant> reviewsrestaurant;
+    
+	
+	 public List<ReviewRestaurant> getReviewsrestaurant() {
+	        return reviewsrestaurant;
+	    }
+	 
+    
+
+	@ManyToOne(fetch = FetchType.LAZY) // Assuming each Hotel belongs to one Member
+    @JoinColumn(name = "member_id") // Assuming you have a column named member_id in your card (hotel) table
+    private Member member;
 
     
     
   //constructors
   	public Restaurant() {}
   	
-  	public Restaurant(String title, String description, String location, String image, int price) {
+  	public Restaurant(String title, String description, String location, String image) {
   		this.title=title;
   		this.description=description;
   		this.location=location;
   		this.image=image;
-  		this.price=price;
+  	
   	}
     
     
@@ -86,39 +115,45 @@ public class Restaurant {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public int getPrice() {
-		return price;
-	}
-	public void setPrice(int price) {
-		this.price = price;
-	}
 
 
 
-	public LocalDate getStartDate() {
-		return startDate;
+	public String getRestaurantType() {
+		return restaurantType;
 	}
 
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
-	}
-
-	public LocalDate getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(LocalDate endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getCuisineType() {
-		return cuisineType;
-	}
-
-	public void setCuisineType(String cuisineType) {
-		this.cuisineType = cuisineType;
+	public void setRestaurantType(String restaurantType) {
+		this.restaurantType = restaurantType;
 	}
 	
+	public TripPackage getTripPackage() {
+		return tripPackage;
+	}
+
+	public void setTripPackage(TripPackage tripPackage) {
+		this.tripPackage = tripPackage;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public void setReviewsrestaurant(List<ReviewRestaurant> reviewsrestaurant) {
+		this.reviewsrestaurant = reviewsrestaurant;
+	}
+	
+    
+    public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 	
     
 }

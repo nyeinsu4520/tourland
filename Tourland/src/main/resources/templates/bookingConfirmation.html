@@ -2,11 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Confirmation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .confirmation-card {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #00003f;
+            border-color: #00003f;
+        }
+        .btn-primary:hover {
+            background-color: #000027;
+            border-color: #000027;
+        }
+    </style>
 </head>
 <body>
-    <h1>Booking Successful!</h1>
-    <p>Thank you for booking with us.</p>
-    <!-- You can add more details or a link to return to the home page or continue browsing -->
+    <div class="container">
+        <div class="confirmation-card">
+            <h1 class="display-4">Booking Successful!</h1>
+            <p class="lead">Thank you for booking with us. Your reservation has been confirmed.</p>
+            <p>We have sent a notification to the address provided. If you have any questions or need further assistance, feel free to <a href="mailto:support@example.com">contact us</a>.</p>
+            <a href="/" class="btn btn-primary">Return to Home Page</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

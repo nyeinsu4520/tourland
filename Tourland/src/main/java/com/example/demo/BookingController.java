@@ -53,6 +53,8 @@ public class BookingController {
 	        @RequestParam("selectedPassengers") int selectedPassengers, 
 	        @RequestParam("packageId") int packageId) {
 
+		
+		
 	    // Retrieve the Package entity using the packageId
 	    Package pkg = packageRepo.findById(packageId)
 	                              .orElseThrow(() -> new IllegalArgumentException("Invalid packageId: " + packageId));

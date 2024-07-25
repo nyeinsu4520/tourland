@@ -13,4 +13,18 @@ import jakarta.transaction.Transactional;
 public interface CardRepository extends JpaRepository<Card, Integer> {
 	
 	List<Card> findAllByTripPackageId(Long tripPackageId);
+	 List<Card> findByLocationContainingIgnoreCase(String location);
+	 
+	 @Query("SELECT c FROM Card c LEFT JOIN c.reviewshotel r GROUP BY c ORDER BY AVG(r.rating) DESC")
+	    List<Card> findAllOrderByRatingDesc();
+	 
+
+	 @Query("SELECT c, COALESCE(AVG(r.rating), 0) AS averageRating " +
+	           "FROM Card c LEFT JOIN c.reviewshotel r " +
+	           "GROUP BY c.hotel_id")
+	    List<Object[]> findAllWithAverageRatings();
+	 
+	 
+	 
+
 }

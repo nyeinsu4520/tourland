@@ -1,4 +1,0 @@
-package com.example.demo;
-
-public interface RestaurantSelectionRepository extends JpaRepository<RestaurantSelection, Integer> {
-}

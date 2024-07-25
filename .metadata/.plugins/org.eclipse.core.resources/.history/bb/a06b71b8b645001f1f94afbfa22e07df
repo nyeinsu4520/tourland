@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Password Changed</title>
+</head>
+<body>
+    <h1>Password Changed Successfully</h1>
+    <p>Your password has been changed successfully.</p>
+</body>
+</html>

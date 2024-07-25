@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Out</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #495057;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 500px;
+            margin-top: 100px;
+            text-align: center;
+        }
+        .card {
+            padding: 20px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+        .btn-primary {
+            background-color: #00003f;
+            border-color: #00003f;
+        }
+        .btn-primary:hover {
+            background-color: #000027;
+            border-color: #000027;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="display-4">Sign Out Successful</h1>
+            <p class="lead">You have been successfully signed out. We hope to see you again soon.</p>
+            <p>To sign in again, please <a class="btn btn-primary" th:href="@{/login}">click here</a>.</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

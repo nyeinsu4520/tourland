@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Restaurants</title>
+      <!-- Favicon -->
+    <link rel="icon" href="img/tourland2.png" type="image/png" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+    <style>
+        .star {
+            color: gold;
+        }
+        .star.empty {
+            color: lightgray;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .favorite-icon1 {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.favorite-icon1 button {
+    background-color: transparent;
+    border: none;
+}
+
+.favorite-icon1 i {
+    font-size: 1.5rem;
+    color: red;
+}
+
+
+.limited-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+}
+    </style>
+</head>
+<body>
+
+    <div th:replace="@{Fragment/header}"></div>
+
+    <div class="container mt-4">
+        <h3>View Restaurants</h3>
+        <!-- Display success or error message here if needed -->
+        <div class="alert alert-primary" role="alert" th:if="${primary}" th:text="${primary}"></div>
+
+        <div class="form-group">
+            <label for="sortSelect">Sort By:</label>
+            <select id="sortSelect" class="form-control" onchange="sortCards()">
+                <option value="nameAsc">Name (A-Z)</option>
+                <option value="nameDesc">Name (Z-A)</option>
+                <option value="ratingDesc">Rating (High to Low)</option>
+                <option value="ratingAsc">Rating (Low to High)</option>
+            </select>
+        </div>
+
+       <div class="row mt-3" id="cardsContainer">
+    <!-- Loop through each restaurant card, initially sorted by name ascending -->
+    <div th:each="restaurant : ${restaurantList}" class="col-md-4 mb-4" th:data-name="${restaurant.title}" th:data-rating="${restaurant.averageRating}">
+        <div class="card h-100 shadow-sm">
+            <div class="favorite-icon1">
+                <form th:action="@{/addToFavorites}" method="post">
+                    <input type="hidden" name="restaurantId" th:value="${restaurant.restaurant_id}" />
+                    <input type="hidden" name="type" value="Restaurant" />
+                    <input type="hidden" name="memberId" th:value="${memberId}" />
+                    <button type="submit" class="btn btn-outline-dark">
+                        <i class="fa-regular fa-heart"></i>
+                    </button>
+                </form>
+            </div>
+            <!-- Restaurant image -->
+            <img th:src="@{/uploads/restaurants/{id}/{imageName}(id=${restaurant.restaurant_id},imageName=${restaurant.image})}" alt="Restaurant Image" class="card-img-top">
+            <div class="card-body">
+                <!-- Restaurant name -->
+                <h5 class="card-title" th:text="${restaurant.title}"></h5>
+                <!-- Restaurant description -->
+                <p class="card-text limited-text" th:text="${restaurant.description}"></p>
+                <!-- Restaurant rating -->
+                <p>Rating: 
+                    <span th:each="star : ${#numbers.sequence(1, 5)}"
+                          th:classappend="${star <= restaurant.averageRating} ? 'star' : 'star empty'">&#9733;</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+
+    <div th:replace="@{Fragment/footer}"></div>
+
+    <!-- Bootstrap and jQuery JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function sortCards() {
+            var container = document.getElementById('cardsContainer');
+            var cards = Array.prototype.slice.call(container.getElementsByClassName('col-md-4'));
+            var sortBy = document.getElementById('sortSelect').value;
+
+            cards.sort(function(a, b) {
+                var nameA = a.getAttribute('data-name').toLowerCase();
+                var nameB = b.getAttribute('data-name').toLowerCase();
+                var ratingA = parseFloat(a.getAttribute('data-rating'));
+                var ratingB = parseFloat(b.getAttribute('data-rating'));
+
+                switch (sortBy) {
+                    case 'nameAsc':
+                        return nameA.localeCompare(nameB);
+                    case 'nameDesc':
+                        return nameB.localeCompare(nameA);
+                    case 'ratingDesc':
+                        return ratingB - ratingA;
+                    case 'ratingAsc':
+                        return ratingA - ratingB;
+                }
+            });
+
+            cards.forEach(function(card) {
+                container.appendChild(card); // Reattach cards in the new order
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            sortCards(); // Initial sort by name ascending
+        });
+    </script>
+</body>
+</html>

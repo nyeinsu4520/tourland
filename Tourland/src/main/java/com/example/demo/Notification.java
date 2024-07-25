@@ -2,6 +2,8 @@ package com.example.demo;
 
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +20,7 @@ public class Notification {
     private Long id;
 
     private String message;
+    
     private LocalDateTime timestamp;
     private boolean isRead;
 

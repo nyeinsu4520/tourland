@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscribe - Tourland</title>
+    <link rel="icon" href="img/tourland2.png" type="image/png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        .footer h5 {
+            font-weight: bold;
+        }
+        .footer .nav-link {
+            color: #6c757d;
+            padding: 0;
+        }
+        .footer .nav-link:hover {
+            color: #007bff;
+        }
+        .footer .form-control {
+            border-radius: 0;
+        }
+        .footer .btn-primary {
+            border-radius: 0;
+        }
+        .footer .social-icons a {
+            color: #6c757d;
+            margin-right: 10px;
+        }
+        .footer .social-icons a:hover {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="@{Fragment/header}"></div>
+<div class="container footer">
+    <footer class="py-5">
+        <div class="row">
+            <div class="col-md-5 mb-3">
+                <form th:action="@{/subscribe}" method="post">
+                    <h5>Subscribe to Our Newsletter</h5>
+                    <p>Get the latest updates and offers delivered to your inbox.</p>
+                    <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                        <label for="newsletter" class="visually-hidden">Email address</label>
+                        <input id="newsletter" name="email" type="email" class="form-control" placeholder="Email address">
+                        <button class="btn btn-primary" type="submit">Subscribe</button>
+                    </div>
+                </form>
+                <!-- Display messages -->
+                <div th:if="${message != null}" class="alert alert-success mt-3" role="alert">
+                    <p th:text="${message}"></p>
+                </div>
+                <div th:if="${error != null}" class="alert alert-danger mt-3" role="alert">
+                    <p th:text="${error}"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+            <p>&copy; 2024 Tourland. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+<div th:replace="@{Fragment/footer}"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

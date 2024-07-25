@@ -1,0 +1,34 @@
+package com.example.demo;
+
+
+	import org.springframework.beans.factory.annotation.Autowired;
+	import org.springframework.stereotype.Controller;
+	import org.springframework.ui.Model;
+	import org.springframework.web.bind.annotation.GetMapping;
+	import org.springframework.web.bind.annotation.PostMapping;
+	import org.springframework.web.bind.annotation.RequestParam;
+	import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+
+	@Controller
+	public class SubscriptionController {
+
+	    @Autowired
+	    private SubscriptionService subscriptionService;
+
+	    @GetMapping("/subscribe")
+	    public String showSubscriptionForm(Model model) {
+	        return "subscribe";
+	    }
+
+	    @PostMapping("/subscribe")
+	    public String handleSubscription(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
+	        try {
+	            subscriptionService.subscribe(email);
+	            redirectAttributes.addFlashAttribute("message", "Thank you for subscribing!");
+	        } catch (Exception e) {
+	            redirectAttributes.addFlashAttribute("error", "There was an error with your subscription.");
+	        }
+	        return "redirect:/subscribe";
+	    }
+	}

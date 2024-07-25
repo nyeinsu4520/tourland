@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Edit Member</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+20&family=Jersey+25&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Noto+Sans+Myanmar:wght@100;200;300;400;500;600;700;800;900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Padauk:wght@400;700&family=Platypi:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div th:replace="@{Fragment/header}"></div>
+
+
+<div class="container-fluid flex-grow-1 d-flex">
+    <div class="row flex-grow-1 w-100">  
+		<div th:replace="@{Fragment/dashboard}"></div>
+  
+  
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      
+<div class="container m-3">
+    <h1 style="font-family: 'Poppins', sans-serif; color:darkblue;">Edit Hotel</h1>
+    <form th:object="${card}" th:action="@{/card/edit/{id}(id=${card.hotel_id})}" method="post" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{hotel_id}">
+        <!-- Card Details -->
+        <div class="mb-3">
+            <label for="cardName" class="form-label">Hotel Name</label>
+            <input type="text" class="form-control" th:field="*{title}" id="cardName" required>
+            <div class="invalid-feedback">Please enter a hotel name!</div>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <input type="text" class="form-control" th:field="*{description}" id="description" required>
+            <div class="invalid-feedback">Please enter a description!</div>
+        </div>
+        <div class="mb-3">
+            <label for="cardImage" class="form-label">Hotel Image</label>
+            <input type="file" class="form-control" id="cardImage" name="cardImage" accept="image/*">
+            <!-- No required attribute here; handle in validation logic -->
+        </div>
+
+        <!-- Room Types -->
+        <div id="roomTypesContainer">
+            <div th:each="roomType, stat : ${card.roomTypes}" class="room-type mb-3">
+                <div class="mb-3">
+                    <label for="roomType" class="form-label">Room Type</label>
+                    <select class="form-select" th:field="*{roomTypes[__${stat.index}__].type}" required>
+                        <option selected disabled value="">Choose...</option>
+                        <option value="Single">Single</option>
+                        <option value="Double">Double</option>
+                        <option value="Two_Single_Bed">Two Single Bed</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a room type!</div>
+                </div>
+                <div class="mb-3">
+                    <label for="roomPrice" class="form-label">Room Price</label>
+                    <input type="text" class="form-control" th:field="*{roomTypes[__${stat.index}__].price}" required>
+                    <div class="invalid-feedback">Please enter the room price!</div>
+                </div>
+                <div class="mb-3">
+                    <label for="roomImage" class="form-label">Room Image</label>
+                    <input type="file" class="form-control" id="roomImage${stat.index}" name="roomImages" accept="image/*" required>
+                    <div class="invalid-feedback">Please upload an image for this room type!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Another Room Type Button -->
+        <button type="button" class="btn btn-secondary mb-3" id="addRoomTypeBtn">Add Another Room Type</button>
+
+        <!-- Location -->
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <select id="location" class="form-select" th:field="*{location}" required>
+                <option value="">Select a location</option>
+                <option value="Chin">Chin</option>
+                <option value="Kachin">Kachin</option>
+                <option value="Kayin">Kayin (Karen)</option>
+                <option value="Kayah">Kayah</option>
+                <option value="Mon">Mon</option>
+                <option value="Rakhine">Rakhine (Arakan)</option>
+                <option value="Shan">Shan</option>
+                <option value="Yangon">Yangon</option>
+                <option value="Ayeyarwady">Ayeyarwady (Irrawaddy)</option>
+                <option value="Magway">Magway (Magwe)</option>
+                <option value="Mandalay">Mandalay</option>
+                <option value="Bago">Bago (Pegu)</option>
+                <option value="Sagaing">Sagaing</option>
+                <option value="Taninthary">Taninthary (Tenasserim)</option>
+            </select>
+            <div class="invalid-feedback">Please select a valid location.</div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary mb-3">Save Hotel Details</button>
+    </form>
+</div>
+</main></div></div>
+
+<div th:reaplace="@{Fragment/footer}"></div>
+
+<script type="text/javascript">
+    'use strict';
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        });
+
+        var roomTypeIndex = document.querySelectorAll('.room-type').length;
+
+        document.getElementById('addRoomTypeBtn').addEventListener('click', function() {
+            var roomTypesContainer = document.getElementById('roomTypesContainer');
+            var newRoomType = document.createElement('div');
+            newRoomType.classList.add('room-type', 'mb-3');
+            newRoomType.innerHTML = `
+                <div class="mb-3">
+                    <label for="roomType${roomTypeIndex}" class="form-label">Room Type</label>
+                    <select class="form-select" id="roomType${roomTypeIndex}" name="roomTypes[${roomTypeIndex}].type" required>
+                        <option selected disabled value="">Choose...</option>
+                        <option value="Single">Single</option>
+                        <option value="Double">Double</option>
+                        <option value="Two_Single_Bed">Two_Single_Bed</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a room type!</div>
+                </div>
+                <div class="mb-3">
+                    <label for="roomPrice${roomTypeIndex}" class="form-label">Room Price</label>
+                    <input type="text" class="form-control" id="roomPrice${roomTypeIndex}" name="roomTypes[${roomTypeIndex}].price" required>
+                    <div class="invalid-feedback">Please enter the room price!</div>
+                </div>
+                <div class="mb-3">
+                    <label for="roomImage${roomTypeIndex}" class="form-label">Room Image</label>
+                    <input type="file" class="form-control" id="roomImage${roomTypeIndex}" name="roomImages" accept="image/*" required>
+                    <div class="invalid-feedback">Please upload an image for this room type!</div>
+                </div>
+            `;
+            roomTypesContainer.appendChild(newRoomType);
+            roomTypeIndex++;
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Tourland</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container1 {
+            margin-top: 30px;
+        }
+        .header1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header1 h1 {
+            font-size: 2.5em;
+            color: #343a40;
+        }
+        .header1 p {
+            font-size: 1.2em;
+            color: #6c757d;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            font-size: 2em;
+            color: #495057;
+            margin-bottom: 20px;
+        }
+        .section img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .section p {
+            font-size: 1.1em;
+            color: #212529;
+            line-height: 1.6;
+        }
+        .office-image {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .office-image img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+        .contact-info {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .contact-info h3 {
+            font-size: 1.8em;
+            color: #343a40;
+        }
+    </style>
+</head>
+<body>
+	<div th:replace = " @{Fragment/header}"></div>
+    <div class="container1">
+        <div class="header1">
+            <h1>About Us</h1>
+            <p>Discover who we are and what makes Tourland unique</p>
+        </div>
+
+        <div class="section">
+            <h2>Our Mission</h2>
+            <p>At Tourland, our mission is to provide exceptional travel experiences through our curated one-day and one-week tour packages. We believe in creating memorable journeys by offering seamless booking options for accommodations and dining, combined with personal attention to ensure every detail of your trip is perfect.</p>
+        </div>
+
+        <div class="section">
+            <h2>What We Offer</h2>
+            <p>Our website offers a variety of travel packages to suit different preferences and schedules. Whether you're interested in a one-day adventure or an extended one-week exploration, we have the perfect package for you. Additionally, we provide options for booking hotels and restaurants, ensuring a complete and hassle-free travel experience. Our service includes:</p>
+            <ul>
+                <li>One-Day Tour Packages</li>
+                <li>One-Week Tour Packages</li>
+                <li>Hotel Booking</li>
+                <li>Restaurant Reservations</li>
+            </ul>
+            <p>Once your booking is confirmed, you will receive personalized contact from our team to assist with any further details or requests you may have.</p>
+        </div>
+
+        <div class="office-image">
+            <h2>Our Office</h2>
+            <img src="/image/img/office.jpg" alt="Our Office">
+        </div>
+
+       <div class="contact-info">
+        <h3>Contact Us</h3>
+        <p><strong>Phone Numbers:</strong> 0915645212, 095645678</p>
+        <p><strong>Address:</strong> No.34, San Chaung Township, Yangon</p>
+        <p><strong>Email:</strong> <a href="mailto:admin@gmail.com">admin@gmail.com</a></p>
+    	</div>
+    </div>
+	<div th:replace = " @{Fragment/footer}"></div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

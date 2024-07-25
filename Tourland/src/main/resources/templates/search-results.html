@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Ensure Bootstrap CSS is linked properly -->
+    <style>
+        /* Custom styles can be added here */
+        .result-item {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex; /* Use flexbox for layout */
+        }
+        .result-item img {
+            max-width: 200px; /* Set max-width for the image */
+            height: auto;
+            margin-right: 20px; /* Add margin for spacing */
+        }
+        .result-item-content {
+            flex: 1; /* Take remaining space */
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="@{Fragment/header}"></div>
+    
+    <!-- Search Section -->
+    <div class="container">
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <div class="text-center">
+                    <h1 class="fw-bold">Where To?</h1>
+                    <div class="input-group mt-4">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search location">
+                        <div class="input-group-append">
+                            <button id="searchButton" class="btn btn-primary" type="button">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container mt-5">
+        <h1>Search Results for "<span th:text="${query}"></span>"</h1>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Packages</h2>
+                <ul class="list-unstyled">
+                    <li th:each="package : ${packageResults}" class="result-item">
+                        <img th:src="@{uploads/packages/{id}/{imageName} (id=${package.package_id},imageName=${package.image})}" alt="Package Image">
+                        <div class="result-item-content">
+                            <h3 th:text="${package.title}"></h3>
+                            <p th:text="${package.description}"></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h2>Trip Packages</h2>
+                <ul class="list-unstyled">
+                    <li th:each="tripPackage : ${tripPackageResults}" class="result-item">
+                        <img th:src="@{/uploads/trippackages/{id}/{imageName} (id=${tripPackage.id},imageName=${tripPackage.image})}" alt="Trip Package Image">
+                        <div class="result-item-content">
+                            <h3 th:text="${tripPackage.name}"></h3>
+                            <p th:text="${tripPackage.description}"></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h2>Hotels</h2>
+                <ul class="list-unstyled">
+                    <li th:each="hotel : ${hotelResults}" class="result-item">
+                        <img th:src="@{/uploads/cards/{id}/{imageName} (id=${hotel.hotel_id},imageName=${hotel.image})}" alt="Hotel Image">
+                        <div class="result-item-content">
+                            <h3 th:text="${hotel.title}"></h3>
+                            <p th:text="${hotel.description}"></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h2>Restaurants</h2>
+                <ul class="list-unstyled">
+                    <li th:each="restaurant : ${restaurantResults}" class="result-item">
+                        <img th:src="@{/uploads/restaurants/{id}/{imageName} (id=${restaurant.restaurant_id},imageName=${restaurant.image})}" alt="Restaurant Image">
+                        <div class="result-item-content">
+                            <h3 th:text="${restaurant.title}"></h3>
+                            <p th:text="${restaurant.description}"></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="@{Fragment/footer}"></div>
+    
+    <!-- Bootstrap JS and other scripts can be included here -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var searchButton = document.getElementById('searchButton');
+        var searchInput = document.getElementById('searchInput');
+
+        if (searchButton && searchInput) {
+            searchButton.addEventListener('click', function() {
+                var searchValue = searchInput.value;
+                window.location.href = '/search?query=' + encodeURIComponent(searchValue);
+            });
+        }
+    });
+    </script>
+</body>
+</html>

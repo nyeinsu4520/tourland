@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.persistence.JoinColumn;
@@ -32,14 +33,42 @@ public class TripPackage {
     private LocalDate endDate;
     private String image;
     private int price;
-
+    private String location;
+    
+    
     @Transient
+    private Double averageRating;
+    
+
+    
+	public Double getAverageRating() {
+		return averageRating;
+	}
+
+	public void setAverageRating(Double averageRating) {
+		this.averageRating = averageRating;
+	}
+
+	@Transient
     private List<Integer> hotelIds;
 
     @Transient
     private List<Integer> restaurantIds;
+    
+    
+    @OneToMany(mappedBy = "tripPackage", cascade = CascadeType.ALL)
+    private List<ReviewTripPackage> reviewsTripPackage;
+ 
 
-    @ManyToMany
+    public List<ReviewTripPackage> getReviewsTripPackage() {
+		return reviewsTripPackage;
+	}
+
+	public void setReviewsTripPackage(List<ReviewTripPackage> reviewsTripPackage) {
+		this.reviewsTripPackage = reviewsTripPackage;
+	}
+
+	@ManyToMany
     @JoinTable(
         name = "trip_package_hotel",
         joinColumns = @JoinColumn(name = "trip_package_id"),
@@ -54,6 +83,7 @@ public class TripPackage {
         inverseJoinColumns = @JoinColumn(name = "restaurant_id")
     )
     private Set<Restaurant> restaurants = new HashSet<>();
+    
 
     // Getters and setters
 
@@ -145,7 +175,14 @@ public class TripPackage {
 		this.price = price;
 	}
 	
-	
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
 
     // Other getters and setters
     

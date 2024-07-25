@@ -1,0 +1,37 @@
+package com.example.demo;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.demo.TripPackageBooking.Status;
+
+public class TripPackageBookingservice {
+	
+    @Autowired
+    private TripPackageBookingRepository tripPackageBookingRepository;
+
+    public TripPackageBooking createBooking(TripPackageBooking booking) {
+        booking.setStatus(TripPackageBooking.Status.PENDING);
+        return tripPackageBookingRepository.save(booking);
+    }
+
+    public void save(TripPackageBooking booking) {
+        tripPackageBookingRepository.save(booking);
+    }
+    
+    public void handleOrphanedBookings(Long tripPackageId) {
+        // Find all bookings associated with the deleted trip package
+        List<TripPackageBooking> bookings = tripPackageBookingRepository.findByTripPackageId(tripPackageId);
+
+        for (TripPackageBooking booking : bookings) {
+            // Update booking status or handle orphaned bookings
+        	booking.setStatus(Status.CONFIRMED);// Example status update
+            tripPackageBookingRepository.save(booking);
+
+            // Optionally, notify users about the cancellation
+            // sendCancellationNotification(booking.getUser(), booking);
+        }
+    }
+
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorites</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom styles -->
+    <style>
+        .card-img-top {
+            width: 100%;
+            height: 200px; /* Adjust the height as needed */
+            object-fit: cover; /* Ensure the image covers the whole area */
+        }
+        .card-body {
+    height: 150px; /* Adjust as necessary */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card-title span {
+    display: block;
+    height: 50px; /* Adjust to fit the title text */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    -webkit-box-orient: vertical;
+  }
+
+  .card-text {
+    height: 10px; /* Adjust to fit the price text */
+    display: flex;
+    align-items: center;
+  }
+
+  .card-price {
+    display: block;
+    height: 20px; /* Adjust to fit the price text */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+    </style>
+</head>
+<body>
+
+<div th:replace="@{Fragment/header}"></div>
+<div class="container mt-5">
+    <h1 class="mb-4">My Favorites</h1>
+
+    <div th:if="${favorites == null or favorites.isEmpty()}">
+        <p>No favorites yet.</p>
+    </div>
+
+    <div th:unless="${favorites == null or favorites.isEmpty()}">
+        <div class="row">
+            <div th:each="favorite : ${favorites}" class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <img th:src="${favorite.type == 'Package' ? '/uploads/packages/' + favorite.pkg.package_id + '/' + favorite.pkg.image :
+                                  favorite.type == 'Trip_Package' ? '/uploads/trippackages/' + favorite.tripPackage.id + '/' + favorite.tripPackage.image :
+                                  favorite.type == 'Hotel' ? '/uploads/cards/' + favorite.card.hotel_id + '/' + favorite.card.image :
+                                  favorite.type == 'Restaurant' ? '/uploads/restaurants/' + favorite.restaurant.restaurant_id + '/' + favorite.restaurant.image :
+                                  '/images/default-image.jpg'}"
+                         class="card-img-top" alt="Image">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <span th:switch="${favorite.type}">
+                                <span th:case="'Package'" th:text="${favorite.pkg.title}"></span>
+                                <span th:case="'Trip_Package'" th:text="${favorite.tripPackage.description}"></span>
+                                <span th:case="'Hotel'" th:text="${favorite.card.title}"></span>
+                                <span th:case="'Restaurant'" th:text="${favorite.restaurant.title}"></span>
+                            </span>
+                        </h5>
+                        
+                       <p class="card-text" th:if="${favorite.type == 'Package' or favorite.type == 'Trip_Package'}">
+					    Price: <span th:switch="${favorite.type}">
+					        <span th:case="'Package'" th:text="${favorite.pkg.price}"></span>
+					        <span th:case="'Trip_Package'" th:text="${favorite.tripPackage.price}"></span>
+					    </span>
+					</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            <span th:switch="${favorite.type}">
+                                <span th:case="'Package'" th:text="'Package ID: ' + ${favorite.pkg.package_id}"></span>
+                                <span th:case="'Trip_Package'" th:text="'Trip Package ID: ' + ${favorite.tripPackage.id}"></span>
+                                <span th:case="'Hotel'" th:text="'Card ID: ' + ${favorite.card.hotel_id}"></span>
+                                <span th:case="'Restaurant'" th:text="'Restaurant ID: ' + ${favorite.restaurant.restaurant_id}"></span>
+                            </span>
+                        </small>
+                       <form th:action="@{/removeFavorite}" method="post">
+    <input type="hidden" name="type" th:value="${favorite.type}" />
+
+    <input type="hidden" name="id" th:if="${favorite.type == 'Package'}" th:value="${favorite.pkg.package_id}" />
+    <input type="hidden" name="id" th:if="${favorite.type == 'Trip_Package'}" th:value="${favorite.tripPackage.id}" />
+    <input type="hidden" name="id" th:if="${favorite.type == 'Hotel'}" th:value="${favorite.card.hotel_id}" />
+    <input type="hidden" name="id" th:if="${favorite.type == 'Restaurant'}" th:value="${favorite.restaurant.restaurant_id}" />
+
+    <button type="submit" class="btn btn-danger btn-sm float-right ml-2">Remove</button>
+</form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

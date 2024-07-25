@@ -14,6 +14,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import jakarta.persistence.JoinColumn;
 
 @Entity
@@ -24,10 +25,26 @@ public class Package {
     private int package_id;
     private String title;
     private String description;
-    private String image;
+    private String about;
+    
+
+
+
+	private String image;
     private int price;
     private String location;
     
+    @Transient
+    private Double averageRating;
+
+
+	public Double getAverageRating() {
+		return averageRating;
+	}
+
+	public void setAverageRating(Double averageRating) {
+		this.averageRating = averageRating;
+	}
 
 
 
@@ -125,7 +142,13 @@ public class Package {
 	}
 
     
-    	
+	public String getAbout() {
+		return about;
+	}
+
+	public void setAbout(String about) {
+		this.about = about;
+	}	
 	  
 }
 

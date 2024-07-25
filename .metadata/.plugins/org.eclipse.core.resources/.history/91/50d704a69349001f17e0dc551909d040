@@ -1,0 +1,36 @@
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class bookingservice {
+
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    public Booking createBooking(Booking booking) {
+        booking.setStatus(Booking.Status.PENDING);
+        return bookingRepository.save(booking);
+    }
+    
+    public void save(Booking booking) {
+        bookingRepository.save(booking);
+    }
+    
+    public void handleOrphanedBookings(Long tripPackageId) {
+        // Find all bookings associated with the deleted trip package
+        List<Booking> bookings = bookingRepository.findByTripPackageId(tripPackageId);
+
+        for (Booking booking : bookings) {
+            // Update booking status or handle orphaned bookings
+            booking.setStatus("Cancelled"); // Example status update
+            bookingRepository.save(booking);
+
+            // Optionally, notify users about the cancellation
+            // sendCancellationNotification(booking.getUser(), booking);
+        }
+    }
+ 
+}

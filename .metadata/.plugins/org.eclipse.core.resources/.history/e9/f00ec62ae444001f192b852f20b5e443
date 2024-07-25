@@ -1,0 +1,16 @@
+package com.example.demo;
+
+@ControllerAdvice
+public class GlobalControllerAdvice {
+
+    @ModelAttribute("userPrincipal")
+    public Member addUserPrincipal(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof MemberDetails) {
+            MemberDetails userDetails = (MemberDetails) authentication.getPrincipal();
+            return userDetails.getMember();
+        }
+        return null; // Return null if no user is authenticated
+    }
+}
+

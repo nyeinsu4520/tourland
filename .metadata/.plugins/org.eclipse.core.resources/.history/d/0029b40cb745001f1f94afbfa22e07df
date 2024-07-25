@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Password Changed</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS for additional styling -->
+    <style>
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .alert-success {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Password Changed Successfully</h4>
+            <p>Your password has been changed successfully. You can now  <a th:href="@{/login}" class="btn btn-outline-secondary">log in</a> with your new password.</p>
+        </div>
+        <a th:href="@{/}" class="btn btn-secondary">Go to Home</a>
+    </div>
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

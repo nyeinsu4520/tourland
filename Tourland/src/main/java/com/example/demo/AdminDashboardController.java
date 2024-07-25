@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.TripPackageBooking.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +21,15 @@ public class AdminDashboardController {
     private BookingRepository bookingRepository;
 
     @Autowired
+    private TripPackageBookingRepository tripPackageBookingRepository;
+
+    @Autowired
     private NotificationRepository notificationRepository;
 
     @Autowired
     private MemberRepository memberRepository;
+    
+    
 
     @PostMapping("/admin/bookings/{bookingId}/confirm")
     public String confirmBooking(@PathVariable int bookingId, Principal principal) {
@@ -69,10 +75,62 @@ public class AdminDashboardController {
         return "redirect:/admin/bookings";
     }
 
+    @PostMapping("/admin/trip-package-bookings/{tripPackagebookingId}/confirm")
+    public String confirmTripPackageBooking(@PathVariable Long tripPackagebookingId, Principal principal) {
+        TripPackageBooking tripPackageBooking = tripPackageBookingRepository.findById(tripPackagebookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid trip package booking Id:" + tripPackagebookingId));
+        tripPackageBooking.setStatus(TripPackageBooking.Status.CONFIRMED); // Use the appropriate enum
+        tripPackageBookingRepository.save(tripPackageBooking);
+
+        // Retrieve username from Principal
+        String username = principal != null ? principal.getName() : "Unknown";
+
+        Member member = memberRepository.findByEmail(tripPackageBooking.getEmail());
+        if (member != null) {
+            String message = "Your trip package booking with ID " + tripPackageBooking.getId() + " has been confirmed.";
+            Notification notification = new Notification(message, member);
+            notificationRepository.save(notification);
+            logger.info("Notification saved for member: " + member.getId() + ", Username: " + username);
+        } else {
+            logger.warning("Member not found for email: " + tripPackageBooking.getEmail() + ", Username: " + username);
+            // Handle the scenario where member is not found, maybe return an error page or redirect
+        }
+
+        return "redirect:/admin/bookings";
+    }
+
+    @PostMapping("/admin/trip-package-bookings/{tripPackagebookingId}/reject")
+    public String rejectTripPackageBooking(@PathVariable Long tripPackagebookingId) {
+        TripPackageBooking tripPackageBooking = tripPackageBookingRepository.findById(tripPackagebookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid trip package booking Id:" + tripPackagebookingId));
+        tripPackageBooking.setStatus(TripPackageBooking.Status.REJECTED); // Use the appropriate enum
+        tripPackageBookingRepository.save(tripPackageBooking);
+
+        Member member = memberRepository.findByEmail(tripPackageBooking.getEmail());
+        if (member != null) {
+            String message = "Your trip package booking with ID " + tripPackageBooking.getId() + " has been rejected.";
+            Notification notification = new Notification(message, member);
+            notificationRepository.save(notification);
+            logger.info("Notification saved for member: " + member.getId());
+        } else {
+            logger.warning("Member not found for email: " + tripPackageBooking.getEmail());
+        }
+
+        return "redirect:/admin/bookings";
+    }
+
+
+
+
     @GetMapping("/admin/bookings")
     public String adminDashboard(Model model) {
         List<Booking> bookings = bookingRepository.findAll();
+        List<TripPackageBooking> tripPackageBookings = tripPackageBookingRepository.findAll();
+
         model.addAttribute("bookings", bookings);
+        model.addAttribute("tripPackageBookings", tripPackageBookings);
+        System.out.println("Booking records"+tripPackageBookings.size());
+        
         return "adminDashboard";
     }
 }

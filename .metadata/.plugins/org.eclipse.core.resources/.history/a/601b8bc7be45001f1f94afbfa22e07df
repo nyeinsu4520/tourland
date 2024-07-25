@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Password Changed</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS for additional styling -->
+    <style>
+        .container {
+            max-width: 500px;
+            margin-top: 100px;
+        }
+        .card-header {
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+        }
+        .card-body {
+            text-align: center;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h4>Password Changed Successfully</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Your password has been changed successfully. You can now <a th:href="@{/login}" class="btn btn-custom">log in</a> with your new password.</p>
+                <a th:href="@{/}" class="btn btn-outline-secondary">Go to Home</a>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

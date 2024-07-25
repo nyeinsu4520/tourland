@@ -1,0 +1,42 @@
+package com.example.demo;
+
+
+import java.util.Optional;
+
+
+public interface MemberService {
+
+    Optional<Member> findById(Integer id);
+
+    String findIdByUsername(String username);
+
+    Member findByUsername(String name);
+    
+    Integer getLoggedInMemberId();
+
+    // You can add more methods here for other operations related to members
+ // Generate a password reset token
+    public String createPasswordResetTokenForMember(Member member) {
+        // Generate a token (you can use any secure token generation logic)
+        String token = java.util.UUID.randomUUID().toString();
+        // Save the token and associate it with the user (store in database or in-memory map)
+        // This is just an example; adjust according to your storage logic
+        member.setResetToken(token);
+        memberRepository.save(member);
+        return token;
+    }
+
+    // Get user by token
+    public Optional<Member> getMemberByPasswordResetToken(String token) {
+        // Retrieve the user by the token
+        return memberRepository.findByResetToken(token);
+    }
+
+    // Change user password
+    public void changeMemberPassword(Member member, String newPassword) {
+        member.setPassword(newPassword); // Ideally, hash the password before saving
+        memberRepository.save(member);
+    }
+    
+}
+

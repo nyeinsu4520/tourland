@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trip Package Bookings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 90%; /* Adjusted width for better alignment */
+            border-collapse: collapse;
+            margin-left: auto; /* Center the table horizontally */
+            margin-right: auto;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left; /* Align text to the left */
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="@{Fragment/header}"></div>
+    <h1>Trip Package Bookings</h1>
+    
+    <h3>Your Booking is Successful!</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Trip Package</th>
+                <th>Hotel</th>
+                <th>Room Type</th>
+                <th>Restaurant</th>
+                <th>Participants</th>
+                <th>Booking Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="booking : ${bookings}">
+                <td th:text="${booking.id}"></td>
+                <td th:text="${booking.tripPackage.name}"></td>
+                <td th:text="${booking.hotel.title}"></td>
+                <td th:text="${roomTypeMap[booking.id]}"></td> <!-- Access roomTypeMap using booking.id -->
+                <td th:text="${booking.restaurant.title}"></td>
+                <td th:text="${booking.participants}"></td>
+                <td th:text="${booking.bookingDate}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div th:replace="@{Fragment/footer}"></div>
+</body>
+</html>

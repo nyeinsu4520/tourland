@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Trip Package</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+    <div th:replace="@{Fragment/header}"></div>
+
+    <div class="container-fluid">
+        <div class="row flex-grow-1 w-100">
+            <div th:replace="@{Fragment/dashboard}"></div>
+
+            <!-- Main content area -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container mt-4">
+                    <h3>Edit Trip Package</h3>
+                    <div class="alert alert-primary" role="alert" th:if="${primary}" th:text="${primary}"></div>
+
+                    <form th:action="@{/tripPackage/edit/{id}(id=${tripPackage.id})}" th:object="${tripPackage}" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="id" class="form-label">ID</label>
+                            <input type="text" id="id" class="form-control" th:field="*{id}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" id="name" class="form-control" th:field="*{name}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea id="description" class="form-control" th:field="*{description}" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image</label>
+                            <input type="file" id="image" class="form-control" th:field="*{image}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Price</label>
+                            <input type="number" id="price" class="form-control" th:field="*{price}" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="startDate" class="form-label">Start Date</label>
+                            <input type="date" id="startDate" class="form-control" th:field="*{startDate}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="endDate" class="form-label">End Date</label>
+                            <input type="date" id="endDate" class="form-control" th:field="*{endDate}" required>
+                        </div>
+                        <div class="mb-3">
+                        <label for="packageLocation" class="form-label">Location</label>
+                        <select id="packageLocation" class="form-select" th:field="*{location}" aria-label="Location" required>
+                            <option value="">Select a location</option>
+                            <option value="Chin">Chin</option>
+                            <option value="Kachin">Kachin</option>
+                            <option value="Kayin">Kayin (Karen)</option>
+                            <option value="Kayah">Kayah</option>
+                            <option value="Mon">Mon</option>
+                            <option value="Rakhine">Rakhine (Arakan)</option>
+                            <option value="Shan">Shan</option>
+                            <option value="Yangon">Yangon</option>
+                            <option value="Ayeyarwady">Ayeyarwady (Irrawaddy)</option>
+                            <option value="Magway">Magway (Magwe)</option>
+                            <option value="Mandalay">Mandalay</option>
+                            <option value="Bago">Bago (Pegu)</option>
+                            <option value="Sagaing">Sagaing</option>
+                            <option value="Taninthary">Taninthary (Tenasserim)</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a valid location.</div>
+                    </div>
+                        <div class="mb-3">
+                            <label for="hotels" class="form-label">Hotels</label>
+                            <select id="hotels" class="form-control" th:field="*{hotels}" multiple required>
+                                <option th:each="hotel : ${allHotels}" th:value="${hotel.hotel_id}" th:text="${hotel.name}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="restaurants" class="form-label">Restaurants</label>
+                            <select id="restaurants" class="form-control" th:field="*{restaurants}" multiple required>
+                                <option th:each="restaurant : ${allRestaurants}" th:value="${restaurant.id}" th:text="${restaurant.name}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a th:href="@{/viewtrippackages}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div th:replace="@{Fragment/footer}"></div>
+
+    <!-- Additional scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

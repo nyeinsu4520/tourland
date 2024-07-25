@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Category</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>  
+	<div th:replace="@{Fragment/header}"></div>
+  <div class="container-fluid flex-grow-1 d-flex">
+    <div class="row flex-grow-1 w-100">
+      
+       <div th:replace="@{Fragment/dashboard}"></div>
+
+      <!-- Main Content -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="container mt-4">
+          <h1 style="font-family: 'Poppins', sans-serif; color: darkblue;">Add New Restaurant</h1>
+          <form th:object="${restaurant}" th:action="@{/restaurant/save}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label for="restaurantName" class="form-label">Restaurant Name</label>
+              <input class="form-control" th:field="*{title}" type="text" id="restaurantName" aria-label="Restaurant Name" required>
+              <div class="invalid-feedback">Please enter a valid Restaurant name!</div>
+              <p class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+            </div>
+            <div class="mb-3">
+              <label for="restaurantName" class="form-label">Restaurant Description</label>
+              <input class="form-control" th:field="*{description}" type="text" id="restaurantName" aria-label="Restaurant Name" required>
+              <div class="invalid-feedback">Please enter a valid Restaurant Description!</div>
+              <p class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+            </div>
+            <div class="mb-3">
+              <label for="restaurantImage" class="form-label">Restaurant Image</label>
+              <input type="file" class="form-control" id="restaurantImage" name="restaurantImage" accept="image/*" required>
+              <div class="invalid-feedback">Please upload an image!</div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="restaurantType" class="form-label">Restaurant Type</label>
+              <select class="form-select" th:field="*{restaurantType}" id="restaurantType" required>
+                <option selected disabled value="">Choose...</option>
+                <option value="Japanese, Sushi, Asian">Japanese, Sushi, Asian</option>
+                <option value="Cafe">Cafe / Coffee Shop</option>
+                <option value="Contemporary Casual">Contemporary Casual</option>
+                <option value="Fast Food">Fast Food / QSR</option>
+                <option value="Fast Casual">Fast Casual</option>
+                <option value="Fine Dining">Fine Dining</option>
+                <option value="Food Truck">Food Truck</option>
+                <option value="Greasy Spoon">Greasy Spoon / Diner</option>
+                <option value="Pop Up Restaurant">Pop-Up Restaurant</option>
+              </select>
+              <div class="invalid-feedback">Please select a restaurant type!</div>
+            </div>
+            
+            
+            
+             <div class="mb-3">
+					    <label for="location" class="form-label">Location</label>
+					    <select id="location" class="form-select" th:field="*{location}" aria-label="Location" required>
+					        <option value="">Select a location</option>
+					        <option value="Chin">Chin</option>
+					        <option value="Kachin">Kachin</option>
+					        <option value="Kayin">Kayin (Karen)</option>
+					        <option value="Kayah">Kayah</option>
+					        <option value="Mon">Mon</option>
+					        <option value="Rakhine">Rakhine (Arakan)</option>
+					        <option value="Shan">Shan</option>
+					        <option value="Yangon">Yangon</option>
+					        <option value="Ayeyarwady">Ayeyarwady (Irrawaddy)</option>
+					        <option value="Magway">Magway (Magwe)</option>
+					        <option value="Mandalay">Mandalay</option>
+					        <option value="Bago">Bago (Pegu)</option>
+					        <option value="Sagaing">Sagaing</option>
+					        <option value="Taninthary">Taninthary (Tenasserim)</option>
+					        <!-- Add more options as needed -->
+					    </select>
+					    <div class="invalid-feedback">Please select a valid location.</div>
+					</div>
+            	<div class="mb-3">
+              <label for="restaurantAddress" class="form-label">Restaurant Address</label>
+              <input class="form-control" th:field="*{address}" type="text" id="restaurantAddress" aria-label="Restaurant Address" required>
+              <div class="invalid-feedback">Please enter a valid Restaurant Address!</div>
+              <p class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
+            </div>
+            <div class="mb-3">
+              <input class="form-control text-white bg-primary" type="submit" value="Save">
+            </div>
+          </form>
+        </div>
+      </main>
+      <!-- End Main Content -->
+    </div>
+  </div>
+
+  <!-- Form Validation -->
+  <script type="text/javascript">
+    'use strict';
+    var form = document.querySelector('.needs-validation');
+    form.addEventListener('submit', function(event) {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    });
+  </script>
+  <!-- End Form Validation -->
+  <div th:replace="@{Fragment/footer}"></div>
+</body>
+</html>

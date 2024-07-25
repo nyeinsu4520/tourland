@@ -1,0 +1,20 @@
+package com.example.demo;
+
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+public interface TripPackageRepository extends JpaRepository<TripPackage, Long>{
+
+	List<TripPackage> findByLocationContainingIgnoreCase(String location);
+	
+	
+	@Query("SELECT r, COALESCE(AVG(rev.rating), 0) AS averageRating " +
+	           "FROM TripPackage r LEFT JOIN r.reviewsTripPackage rev " +
+	           "GROUP BY r.id")
+	    List<Object[]> findAllWithAverageRatings();
+	    
+	    public Optional<TripPackage> findById(Long id);
+}

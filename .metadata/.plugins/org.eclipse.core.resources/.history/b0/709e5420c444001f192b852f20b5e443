@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Packages</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="img/tourland2.png" type="image/png" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <style>
+        .star {
+            color: gold;
+        }
+        .star.empty {
+            color: lightgray;
+        }
+        .card {
+            margin-bottom: 20px;
+            position: relative; /* Ensure position relative for favorite icon positioning */
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .favorite-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="@{Fragment/header}"></div>
+    
+    <div class="container mt-4">
+        <h3>View Packages</h3>
+        <!-- Display success or error message here if needed -->
+        <div class="alert alert-primary" role="alert" th:if="${primary}" th:text="${primary}"></div>
+
+        <div class="form-group">
+            <label for="sortSelect">Sort By:</label>
+            <select id="sortSelect" class="form-control" onchange="sortCards()">
+                <option value="nameAsc">Name (A-Z)</option>
+                <option value="nameDesc">Name (Z-A)</option>
+                <option value="ratingDesc">Rating (High to Low)</option>
+                <option value="ratingAsc">Rating (Low to High)</option>
+            </select>
+        </div>
+        
+        <div class="row mt-5" id="cardsContainer">
+            <!-- Iterate over tripPackages -->
+            <div th:each="package, iterStat : ${packages}" class="col-sm-6 col-md-4 mb-4"
+                 th:data-name="${package.title.toLowerCase()}"
+                 th:data-rating="${package.averageRating}">
+                <div class="card h-100">
+                    
+                    <a th:href="@{/package/view/{id} (id=${package.id})}">
+                        <img th:src="@{|/uploads/packages/${package.id}/${package.image}|}" class="card-img-top" alt="Package Image" />
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${package.title}"></h5>
+                        <p class="card-text" th:text="${package.description}"></p>
+                        <p class="card-text">From MMK <span th:text="${package.price}"></span> per person</p>
+                        <!-- Star rating -->
+                        <p>Rating: 
+                            <span th:each="star : ${#numbers.sequence(1, 5)}"
+                                  th:classappend="${star <= package.averageRating} ? 'star' : 'star empty'">&#9733;</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- End iteration -->
+        </div>
+    </div>
+    
+    <div th:replace="@{Fragment/footer}"></div>
+
+    <!-- Bootstrap and jQuery JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function sortCards() {
+            var container = document.getElementById('cardsContainer');
+            var cards = Array.from(container.getElementsByClassName('col-sm-6 col-md-4 mb-4'));
+            var sortBy = document.getElementById('sortSelect').value;
+
+            cards.sort(function(a, b) {
+                var nameA = a.getAttribute('data-name');
+                var nameB = b.getAttribute('data-name');
+                var ratingA = parseFloat(a.getAttribute('data-rating'));
+                var ratingB = parseFloat(b.getAttribute('data-rating'));
+
+                switch (sortBy) {
+                    case 'nameAsc':
+                        return nameA.localeCompare(nameB);
+                    case 'nameDesc':
+                        return nameB.localeCompare(nameA);
+                    case 'ratingDesc':
+                        return ratingB - ratingA;
+                    case 'ratingAsc':
+                        return ratingA - ratingB;
+                    default:
+                        return 0;
+                }
+            });
+
+            // Reattach cards in the new order
+            cards.forEach(function(card) {
+                container.appendChild(card);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            sortCards(); // Initial sort by name ascending
+        });
+    </script>
+</body>
+</html>

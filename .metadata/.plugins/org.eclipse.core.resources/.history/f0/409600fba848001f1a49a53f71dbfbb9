@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Package</title>
+        <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/bootstrap/js/bootstrap.bundle.js" type="text/javascript"></script>
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+<div th:replace="@{Fragment/header}"></div>
+
+<div class="container-fluid flex-grow-1 d-flex">
+    <div class="row flex-grow-1 w-100">
+       
+       
+        <div th:replace="@{Fragment/dashboard}"></div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="container mt-3">
+                <h3>Add New Package</h3>
+                <form th:object="${package}" th:action="@{/package/save}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label for="packageName" class="form-label">Package Name</label>
+                        <input id="packageName" class="form-control" th:field="*{title}" type="text" aria-label="Package Name" required>
+                        <div class="invalid-feedback">Please enter a valid package name.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="packageImage" class="form-label">Image</label>
+                        <input id="packageImage" type="file" class="form-control" name="packageImage" accept="image/*" required>
+                        <div class="invalid-feedback">Please select an image file.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <input id="description" class="form-control" th:field="*{description}" type="text" aria-label="Description" required>
+                        <div class="invalid-feedback">Please enter a valid description.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Detail</label>
+                        <input id="description" class="form-control" th:field="*{about}" type="text" aria-label="Description" required>
+                        <div class="invalid-feedback">Please enter a valid description.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Available Price</label>
+                        <input id="price" class="form-control" th:field="*{price}" type="text" aria-label="Price" required>
+                        <div class="invalid-feedback">Please enter a valid price.</div>
+                    </div>
+                    <div class="mb-3">
+					    <label for="location" class="form-label">Location</label>
+					    <select id="location" class="form-select" th:field="*{location}" aria-label="Location" required>
+					        <option value="">Select a location</option>
+					        <option value="Chin">Chin</option>
+					        <option value="Kachin">Kachin</option>
+					        <option value="Kayin">Kayin (Karen)</option>
+					        <option value="Kayah">Kayah</option>
+					        <option value="Mon">Mon</option>
+					        <option value="Rakhine">Rakhine (Arakan)</option>
+					        <option value="Shan">Shan</option>
+					        <option value="Yangon">Yangon</option>
+					        <option value="Ayeyarwady">Ayeyarwady (Irrawaddy)</option>
+					        <option value="Magway">Magway (Magwe)</option>
+					        <option value="Mandalay">Mandalay</option>
+					        <option value="Bago">Bago (Pegu)</option>
+					        <option value="Sagaing">Sagaing</option>
+					        <option value="Taninthary">Taninthary (Tenasserim)</option>
+					        <!-- Add more options as needed -->
+					    </select>
+					    <div class="invalid-feedback">Please select a valid location.</div>
+					</div>
+
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+<div th:replace="@{Fragment/footer}"></div>
+</body>
+</html>

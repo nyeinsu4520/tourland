@@ -1,11 +1,15 @@
 package com.example.demo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.annotation.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -20,46 +24,56 @@ public class Card {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hotel_id")
     private int hotel_id;
     private String title;
     private String description;
     private String location;
     private String image;
-	private int price;
-	private String roomType;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
+    private String address;
+    private String phnum;
+    private String has_foreign_key_reference;
+	
     
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate endDate;
+ // Add this field to store the average rating
+    @Transient
+    private Double averageRating;
+
 	
     
 
-    @ManyToOne
+	public String getPhnum() {
+		return phnum;
+	}
+
+	public void setPhnum(String phnum) {
+		this.phnum = phnum;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Double getAverageRating() {
+		return averageRating;
+	}
+
+	public void setAverageRating(Double averageRating) {
+		this.averageRating = averageRating;
+	}
+
+	@ManyToOne
     @JoinColumn(name = "trip_package_id")
     private TripPackage tripPackage;
 	
-
-	public String getRoomType() {
-		return roomType;
-	}
-
-	public void setRoomType(String roomType) {
-		this.roomType = roomType;
-	}
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoomType> roomTypes = new ArrayList<>();
 
 
-
-	public List<ReviewHotel> getReviewHotel() {
-		return ReviewHotel;
-	}
-
-	public void setReviewHotel(List<ReviewHotel> reviewHotel) {
-		ReviewHotel = reviewHotel;
-	}
-
-	@OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
-    private List<ReviewHotel> ReviewHotel;
 
 
 
@@ -88,12 +102,11 @@ public class Card {
 		this.member = member;
 	}
 
-	public Card(String title, String description, String location, String image, int price) {
+	public Card(String title, String description, String location, String image) {
 		this.title=title;
 		this.description=description;
 		this.location=location;
 		this.image=image;
-		this.price=price;
 	}
 	
     // Getters and Setters
@@ -136,29 +149,31 @@ public class Card {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public int getPrice() {
-		return price;
-	}
-	public void setPrice(int price) {
-		this.price = price;
+
+	public List<RoomType> getRoomTypes() {
+		return roomTypes;
 	}
 
-	public LocalDate getStartDate() {
-		return startDate;
+	public void setRoomTypes(List<RoomType> roomTypes) {
+		this.roomTypes = roomTypes;
 	}
 
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
+	public TripPackage getTripPackage() {
+		return tripPackage;
 	}
 
-	public LocalDate getEndDate() {
-		return endDate;
+	public void setTripPackage(TripPackage tripPackage) {
+		this.tripPackage = tripPackage;
 	}
 
-	public void setEndDate(LocalDate endDate) {
-		this.endDate = endDate;
+	public String getHas_foreign_key_reference() {
+		return has_foreign_key_reference;
 	}
-	
+
+	public void setHas_foreign_key_reference(String has_foreign_key_reference) {
+		this.has_foreign_key_reference = has_foreign_key_reference;
+	}
+
 	
     
 }

@@ -15,5 +15,10 @@ public interface MemberService {
     Integer getLoggedInMemberId();
 
     // You can add more methods here for other operations related to members
+    String createPasswordResetTokenForMember(Member member);
+
+    Optional<Member> getMemberByPasswordResetToken(String token);
+
+    void changeMemberPassword(Member member, String newPassword);
 }
 

@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +13,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     private MemberRepository memberRepository;
+    
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Optional<Member> findById(Integer id) {
@@ -37,5 +42,25 @@ public class MemberServiceImpl implements MemberService {
             return member != null ? member.getId() : null;
         }
         return null;
+    }
+    
+
+    @Override
+    public String createPasswordResetTokenForMember(Member member) {
+        String token = java.util.UUID.randomUUID().toString();
+        member.setResetToken(token);
+        memberRepository.save(member);
+        return token;
+    }
+
+    @Override
+    public Optional<Member> getMemberByPasswordResetToken(String token) {
+        return memberRepository.findByResetToken(token);
+    }
+
+    @Override
+    public void changeMemberPassword(Member member, String newPassword) {
+        member.setPassword(passwordEncoder.encode(newPassword));
+        memberRepository.save(member);
     }
 }

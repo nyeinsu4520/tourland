@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footer - Tourland</title>
+    <link rel="icon" href="img/tourland2.png" type="image/png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        .footer {
+            background-color: #f8f9fa;
+            padding: 40px 0;
+        }
+        .footer h5 {
+            font-weight: bold;
+        }
+        .footer .nav-link {
+            color: #6c757d;
+            padding: 0;
+        }
+        .footer .nav-link:hover {
+            color: #007bff;
+        }
+        .footer .form-control {
+            border-radius: 0;
+        }
+        .footer .btn-primary {
+            border-radius: 0;
+        }
+        .footer .social-icons a {
+            color: #6c757d;
+            margin-right: 10px;
+        }
+        .footer .social-icons a:hover {
+            color: #007bff;
+        }
+        .footer iframe {
+            max-width: 100%;
+            width: 300px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container footer">
+    <footer class="py-5">
+        <div class="row">
+            <div class="col-6 col-md-2 mb-3">
+                <h5>Tourland</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a th:href="@{/}" class="nav-link p-0 text-body-secondary">Home</a></li>
+                    <li class="nav-item mb-2"><a th:href="@{/}" class="nav-link p-0 text-body-secondary">Tours</a></li>
+                    <li class="nav-item mb-2"><a th:href="@{/aboutus}" class="nav-link p-0 text-body-secondary">About Us</a></li>
+                    <li class="nav-item mb-2"><a th:href="@{information}" class="nav-link p-0 text-body-secondary">Information</a></li>
+                    <li class="nav-item mb-2"><a th:href="@{/bookings}" class="nav-link p-0 text-body-secondary">My Trips</a></li>
+                </ul>
+            </div>
+
+            <div class="col-6 col-md-4 mb-3">
+                <h5>Contact Us</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a href="tel:0915645212" class="nav-link p-0 text-body-secondary">Phone: 0915645212</a></li>
+                    <li class="nav-item mb-2"><a href="tel:095645678" class="nav-link p-0 text-body-secondary">Phone: 095645678</a></li>
+                    <li class="nav-item mb-2"><a href="mailto:admin@gmail.com" class="nav-link p-0 text-body-secondary">Email: admin@gmail.com</a></li>
+                    <li class="nav-item mb-2"><a href="https://www.google.com/maps?q=No.34,+San+Chaung+Township,+Yangon" target="_blank" class="nav-link p-0 text-body-secondary">Address: No.34, San Chaung Township, Yangon</a></li>
+                </ul>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="col-md-5 mb-3">
+                <form th:action="@{/subscribe}" method="post">
+                    <h5>Subscribe to Our Newsletter</h5>
+                    <p>Get the latest updates and offers delivered to your inbox.</p>
+                    <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                        <label for="newsletter" class="visually-hidden">Email address</label>
+                        <input id="newsletter" name="email" type="email" class="form-control" placeholder="Email address" required>
+                        <button class="btn btn-primary" type="submit">Subscribe</button>
+                    </div>
+                </form>
+                <div th:if="${message != null}" class="alert alert-success mt-3" role="alert">
+                    <p th:text="${message}"></p>
+                </div>
+                <div th:if="${error != null}" class="alert alert-danger mt-3" role="alert">
+                    <p th:text="${error}"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+            <p>&copy; 2024 Tourland. All rights reserved.</p>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d61108.80053978483!2d96.1226273038318!3d16.811465247092766!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30c19389e7d16d39%3A0x5e9a12b5230e9eff!2sNo.34%2C%20Baho%20Road%2C%20Sanchaung%20Township!5e0!3m2!1sen!2s!4v1721797955669!5m2!1sen!2s" width="300" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

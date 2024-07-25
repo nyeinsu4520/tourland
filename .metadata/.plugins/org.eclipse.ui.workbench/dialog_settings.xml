@@ -3,18 +3,22 @@
 	<section name="NewWizardAction">
 		<item key="NewWizardSelectionPage.STORE_SELECTED_ID" value="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"/>
 		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
-			<item value="org.eclipse.jdt.ui.java"/>
 			<item value="org.eclipse.wst.web.ui"/>
-			<item value="org.eclipse.jst.ws.ui.new"/>
+			<item value="org.eclipse.wb"/>
 		</list>
 		<section name="NewWizard.dialogBounds">
+			<item key="DIALOG_X_ORIGIN" value="575"/>
+			<item key="DIALOG_Y_ORIGIN" value="183"/>
+			<item key="DIALOG_WIDTH" value="788"/>
+			<item key="DIALOG_HEIGHT" value="531"/>
+			<item key="DIALOG_FONT_NAME" value="1|Segoe UI|10.2|0|WINDOWS|1|-17|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
 		</section>
 	</section>
 	<section name="PropertyDialog.dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="334"/>
-		<item key="DIALOG_Y_ORIGIN" value="74"/>
+		<item key="DIALOG_Y_ORIGIN" value="67"/>
 		<item key="DIALOG_WIDTH" value="1271"/>
-		<item key="DIALOG_HEIGHT" value="668"/>
+		<item key="DIALOG_HEIGHT" value="962"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|10.2|0|WINDOWS|1|-17|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
 	</section>
 	<section name="WorkbenchPreferenceDialog.dialogBounds">
